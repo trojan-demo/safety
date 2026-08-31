@@ -1,0 +1,6 @@
+{
+  "name": "TROJAN CONSTRUCTION HOLDING",
+  "description": "Official portal for TROJAN CONSTRUCTION HOLDING featuring current projects, safety standards, team showcase, supervisor HSE inspection system with PDF export & dispatch, and contact services.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

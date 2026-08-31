@@ -1,0 +1,188 @@
+<div class="min-h-screen bg-stone-100 text-stone-900 py-12">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <!-- Header -->
+    <div class="text-center max-w-3xl mx-auto mb-16 space-y-3">
+      <div class="inline-flex items-center gap-1.5 text-xs font-bold uppercase tracking-widest text-orange-600 bg-orange-600/10 px-3.5 py-1.5 rounded-full border border-orange-500/30">
+        <mat-icon class="!text-orange-600 !text-sm !w-4 !h-4">contact_mail</mat-icon>
+        Get in Touch
+      </div>
+      <h1 class="font-display text-3xl sm:text-5xl font-extrabold text-stone-900">
+        Contact Us
+      </h1>   
+    </div>
+
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-10">
+      <!-- Contact Info Column -->
+      <div class="lg:col-span-5 space-y-6">
+
+        <!-- Corporate HQ Card -->
+        <div class="bg-white p-6 rounded-2xl border border-stone-200 shadow-sm space-y-4">
+          <h3 class="text-base font-bold text-stone-900 font-display flex items-center gap-2">
+            <mat-icon class="!text-orange-600">business</mat-icon>
+            Trojan Construction Holding
+          </h3>
+          <div class="space-y-3 text-xs text-stone-600">
+            <div class="flex items-start gap-2.5">
+              <mat-icon class="!text-stone-400 !text-base !w-4 !h-4 shrink-0 mt-0.5">location_on</mat-icon>
+              <span>
+                  Worker City 1 - Jarn Yafour - Mafraq Industrial Area - Abu Dhabi - United Arab Emirates</span>
+            </div>
+            <div class="flex items-start gap-2.5">
+              <mat-icon class="!text-stone-400 !text-base !w-4 !h-4 shrink-0 mt-0.5">call</mat-icon>
+              <span>Tel: +971 25097300</span>
+            </div>
+            <div class="flex items-start gap-2.5">
+              <mat-icon class="!text-stone-400 !text-base !w-4 !h-4 shrink-0 mt-0.5">email</mat-icon>
+              <a href="mailto:info@trojanconstruction.group" class="text-orange-600 font-semibold hover:underline">info&#64;trojanconstruction.group</a>
+            </div>
+            <div class="flex items-start gap-2.5">
+              <mat-icon class="!text-stone-400 !text-base !w-4 !h-4 shrink-0 mt-0.5">schedule</mat-icon>
+              <span class="text-stone-500">HQ Hours: Monday – Friday: 08:00 AM – 05:00 PM </span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Key Department Contacts -->
+        <div class="bg-white p-6 rounded-2xl border border-stone-200 shadow-sm space-y-3">
+          <h3 class="text-base font-bold text-stone-900 font-display flex items-center gap-2">
+            <mat-icon class="!text-orange-600">supervisor_account</mat-icon>
+            Direct Department Inboxes
+          </h3>
+          <div class="space-y-2 text-xs">
+            <div class="p-2.5 rounded-xl bg-stone-50 border border-stone-200 flex justify-between items-center">
+              <div>
+                <div class="text-stone-900 font-semibold">HSE Manager (Aswin Kumar Panigrahi)</div>
+              </div>
+              <a href="mailto:hse-manager@trojan.com" class="text-orange-600 font-semibold hover:underline font-mono">hse-manager&#64;trojan.com</a>
+            </div>
+
+            <div class="p-2.5 rounded-xl bg-stone-50 border border-stone-200 flex justify-between items-center">
+              <div>
+                <div class="text-stone-900 font-semibold">HSE Officer(Savad Mohamed Salim)</div>
+                <div class="text-stone-500 text-[11px]">Tenders & Subcontractor Prequalification</div>
+              </div>
+              <a href="mailto:xxx@trojan.com" class="text-orange-600 font-semibold hover:underline font-mono">hse-officer&#64;trojan.com</a>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Contact Inquiry Form Column -->
+      <div class="lg:col-span-7">
+        <div class="bg-white border border-stone-200 rounded-2xl p-6 sm:p-8 shadow-sm space-y-6">
+          <div>
+            <h2 class="text-xl sm:text-2xl font-bold font-display text-stone-900">Send Us a Project Inquiry</h2>
+          </div>
+
+          @if (submittedSuccessMessage()) {
+            <div class="p-4 rounded-xl bg-emerald-50 border border-emerald-300 text-emerald-800 text-xs flex items-center gap-3 animate-fade-in">
+              <mat-icon class="!text-emerald-600 !text-xl !w-6 !h-6 shrink-0">check_circle</mat-icon>
+              <div>
+                <div class="font-bold text-emerald-900">Success</div>
+                <div>{{ submittedSuccessMessage() }}</div>
+              </div>
+            </div>
+          }
+
+          <form [formGroup]="contactForm" (ngSubmit)="handleSubmit()" class="space-y-4 text-xs">
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div class="space-y-1">
+                <label for="contact-name" class="font-bold text-stone-700 uppercase tracking-wider">Full Name *</label>
+                <input
+                  id="contact-name"
+                  type="text"
+                  formControlName="name"
+                  placeholder="e.g., Robert Sterling"
+                  class="w-full bg-stone-50 border border-stone-300 rounded-xl px-3.5 py-3 text-sm text-stone-900 focus:outline-none focus:border-orange-600 focus:bg-white transition-colors"
+                />
+              </div>
+
+              <div class="space-y-1">
+                <label for="contact-email" class="font-bold text-stone-700 uppercase tracking-wider">Business Email *</label>
+                <input
+                  id="contact-email"
+                  type="email"
+                  formControlName="email"
+                  placeholder="robert@company.com"
+                  class="w-full bg-stone-50 border border-stone-300 rounded-xl px-3.5 py-3 text-sm text-stone-900 focus:outline-none focus:border-orange-600 focus:bg-white transition-colors"
+                />
+              </div>
+            </div>
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div class="space-y-1">
+                <label for="contact-phone" class="font-bold text-stone-700 uppercase tracking-wider">Phone / Mobile *</label>
+                <input
+                  id="contact-phone"
+                  type="tel"
+                  formControlName="phone"
+                  placeholder="+1 (555) 012-3456"
+                  class="w-full bg-stone-50 border border-stone-300 rounded-xl px-3.5 py-3 text-sm text-stone-900 focus:outline-none focus:border-orange-600 focus:bg-white transition-colors"
+                />
+              </div>
+
+              <div class="space-y-1">
+                <label for="contact-company" class="font-bold text-stone-700 uppercase tracking-wider">Company / Entity</label>
+                <input
+                  id="contact-company"
+                  type="text"
+                  formControlName="company"
+                  placeholder="e.g., Horizon Properties Ltd."
+                  class="w-full bg-stone-50 border border-stone-300 rounded-xl px-3.5 py-3 text-sm text-stone-900 focus:outline-none focus:border-orange-600 focus:bg-white transition-colors"
+                />
+              </div>
+            </div>
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div class="space-y-1">
+                <label for="contact-project-interest" class="font-bold text-stone-700 uppercase tracking-wider">Project Sector Interest</label>
+                <select
+                  id="contact-project-interest"
+                  formControlName="projectInterest"
+                  class="w-full bg-stone-50 border border-stone-300 rounded-xl px-3.5 py-3 text-sm text-stone-900 focus:outline-none focus:border-orange-600 focus:bg-white transition-colors"
+                >
+                  <option value="Commercial High-Rise">Commercial High-Rise</option>
+                  <option value="Heavy Civil & Bridges">Heavy Civil & Bridges</option>
+                  <option value="Clean Tech & Industrial">Clean Tech & Industrial</option>
+                  <option value="Luxury Residential">Luxury Residential</option>
+                  <option value="HSE Safety Subcontracting">HSE Safety Subcontracting</option>
+                </select>
+              </div>
+
+              <div class="space-y-1">
+                <label for="contact-subject" class="font-bold text-stone-700 uppercase tracking-wider">Inquiry Subject</label>
+                <input
+                  id="contact-subject"
+                  type="text"
+                  formControlName="subject"
+                  placeholder="e.g., Tender Proposal Inquiry"
+                  class="w-full bg-stone-50 border border-stone-300 rounded-xl px-3.5 py-3 text-sm text-stone-900 focus:outline-none focus:border-orange-600 focus:bg-white transition-colors"
+                />
+              </div>
+            </div>
+
+            <div class="space-y-1">
+              <label for="contact-message" class="font-bold text-stone-700 uppercase tracking-wider">Project Scope & Details *</label>
+              <textarea
+                id="contact-message"
+                formControlName="message"
+                rows="4"
+                placeholder="Please outline site location, estimated square footage, target commencement date, and specific engineering requirements..."
+                class="w-full bg-stone-50 border border-stone-300 rounded-xl p-3.5 text-sm text-stone-900 placeholder-stone-400 focus:outline-none focus:border-orange-600 focus:bg-white transition-colors"
+              ></textarea>
+            </div>
+
+            <button
+              type="submit"
+              [disabled]="isSubmitting()"
+              class="w-full py-3.5 rounded-xl bg-orange-600 hover:bg-orange-500 disabled:opacity-50 text-white font-bold text-sm transition-all shadow-md shadow-orange-600/20 flex items-center justify-center gap-2 mt-2 cursor-pointer"
+            >
+              <mat-icon class="!text-white">send</mat-icon>
+              {{ isSubmitting() ? 'Sending Message...' : 'Send Message' }}
+            </button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,830 @@
+<div class="min-h-screen bg-stone-950 text-stone-100 py-10">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+
+    <!-- Case 1: NOT Authenticated (Supervisor Login Guard) -->
+    @if (!authService.isAuthenticated()) {
+      <div class="max-w-md mx-auto my-12 bg-stone-900 border border-stone-800 rounded-3xl p-8 shadow-2xl">
+        <div class="text-center space-y-3 mb-8">
+          <div class="w-16 h-16 rounded-2xl bg-orange-600/10 border border-orange-500/30 text-orange-400 mx-auto flex items-center justify-center">
+            <mat-icon class="!text-3xl !w-8 !h-8">lock</mat-icon>
+          </div>
+          <h1 class="text-2xl font-black text-white font-display">Supervisor Access Portal</h1>
+        </div>
+
+        <!-- Fixed Credentials Notice Box -->
+        <div class="mb-6 p-4 rounded-xl bg-stone-950 border border-orange-500/30 text-xs space-y-2">
+          <div class="flex items-center gap-1.5 text-orange-400 font-bold">
+            <mat-icon class="!text-orange-400 !text-sm !w-4 !h-4">key</mat-icon>
+            Fixed Supervisor Login Credentials
+          </div>
+          <div class="font-mono text-stone-300 space-y-1 bg-stone-900 p-2.5 rounded border border-stone-800">
+            <div><span class="text-stone-500">Username:</span> <span class="text-orange-300 font-bold">supervisor&#64;trojan.com</span></div>
+            <div><span class="text-stone-500">Password:</span> <span class="text-orange-300 font-bold">TrojanSafety#2026</span></div>
+          </div>
+          <button
+            type="button"
+            (click)="handleDemoLogin()"
+            class="w-full py-2 px-3 rounded-lg bg-orange-600/20 hover:bg-orange-600/30 text-orange-300 font-bold text-xs border border-orange-500/40 transition-colors flex items-center justify-center gap-1.5 mt-2 cursor-pointer"
+          >
+            <mat-icon class="!text-orange-400 !text-sm !w-4 !h-4">bolt</mat-icon>
+            1-Click Auto-Fill & Login (Demo)
+          </button>
+        </div>
+
+        <!-- Login Form -->
+        <form [formGroup]="loginForm" (ngSubmit)="handleLogin()" class="space-y-4">
+          @if (loginErrorMessage()) {
+            <div class="p-3 rounded-xl bg-red-950/80 border border-red-500/40 text-red-300 text-xs flex items-center gap-2">
+              <mat-icon class="!text-red-400 !text-base !w-4 !h-4 shrink-0">error</mat-icon>
+              <span>{{ loginErrorMessage() }}</span>
+            </div>
+          }
+
+          <div class="space-y-1">
+            <label for="login-username" class="block text-xs font-semibold uppercase tracking-wider text-stone-300">
+              Supervisor Identifier / Email
+            </label>
+            <div class="relative">
+              <input
+                id="login-username"
+                type="text"
+                formControlName="username"
+                placeholder="supervisor@apexbuild.com"
+                class="w-full bg-stone-950 border border-stone-700 rounded-xl px-4 py-3 text-sm text-white placeholder-stone-500 focus:outline-none focus:border-orange-500 transition-colors"
+              />
+            </div>
+          </div>
+
+          <div class="space-y-1">
+            <label for="login-password" class="block text-xs font-semibold uppercase tracking-wider text-stone-300">
+              Security Password
+            </label>
+            <div class="relative">
+              <input
+                id="login-password"
+                type="password"
+                formControlName="password"
+                placeholder="••••••••••••"
+                class="w-full bg-stone-950 border border-stone-700 rounded-xl px-4 py-3 text-sm text-white placeholder-stone-500 focus:outline-none focus:border-orange-500 transition-colors"
+              />
+            </div>
+          </div>
+
+          <button
+            type="submit"
+            class="w-full py-3.5 rounded-xl bg-orange-600 hover:bg-orange-500 text-white font-bold text-sm transition-all shadow-lg shadow-orange-600/20 flex items-center justify-center gap-2 mt-2 cursor-pointer"
+          >
+            <mat-icon class="!text-white">login</mat-icon>
+            Sign In to Supervisor Portal
+          </button>
+        </form>
+      </div>
+    }
+
+    <!-- Case 2: AUTHENTICATED SUPERVISOR VIEW -->
+    @if (authService.isAuthenticated()) {
+      <!-- Supervisor Profile Header -->
+      <div class="bg-stone-900 border border-stone-800 rounded-3xl p-6 mb-8 shadow-xl">
+        <!-- Navigation Tabs -->
+        <div class="flex flex-wrap gap-2 mt-6 pt-6 border-t border-stone-800">
+          <button
+            type="button"
+            (click)="activeTab.set('active-form')"
+            [class]="activeTab() === 'active-form' ? 'bg-orange-600 text-white font-bold shadow-md' : 'bg-stone-800 hover:bg-stone-700 text-stone-300 font-semibold'"
+            class="px-4 py-2.5 rounded-xl text-xs sm:text-sm transition-all flex items-center gap-2 cursor-pointer"
+          >
+            <mat-icon class="!text-base !w-4 !h-4">assignment_turned_in</mat-icon>
+            DAILY INSPECTION HSE-FRM-01
+          </button>
+
+          <button
+            type="button"
+            (click)="activeTab.set('submissions')"
+            [class]="activeTab() === 'submissions' ? 'bg-orange-600 text-white font-bold shadow-md' : 'bg-stone-800 hover:bg-stone-700 text-stone-300 font-semibold'"
+            class="px-4 py-2.5 rounded-xl text-xs sm:text-sm transition-all flex items-center gap-2 cursor-pointer"
+          >
+            <mat-icon class="!text-base !w-4 !h-4">history</mat-icon>
+            Submitted Audit History ({{ constructionService.recentSubmissions().length }})
+          </button>
+
+          <button
+            type="button"
+            (click)="activeTab.set('forms-catalog')"
+            [class]="activeTab() === 'forms-catalog' ? 'bg-orange-600 text-white font-bold shadow-md' : 'bg-stone-800 hover:bg-stone-700 text-stone-300 font-semibold'"
+            class="px-4 py-2.5 rounded-xl text-xs sm:text-sm transition-all flex items-center gap-2 cursor-pointer"
+          >
+            <mat-icon class="!text-base !w-4 !h-4">dynamic_form</mat-icon>
+            Form Hub & Future Templates ({{ constructionService.formTemplates().length }})
+          </button>
+        </div>
+      </div>
+
+      <!-- TAB 1: ACTIVE HSE INSPECTION CHECKLIST -->
+      @if (activeTab() === 'active-form') {
+        <div class="space-y-8">
+          <!-- Form Header Title & Quick Compliance Controls -->
+          <div class="bg-stone-900 border border-stone-800 rounded-3xl p-6 lg:p-8 space-y-6 shadow-xl">
+            <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-stone-800 pb-6">
+              <div>
+                <span class="text-xs font-bold uppercase tracking-widest text-orange-400">DAILY INSPECTION HSE-FRM-01</span>
+              </div>
+
+              <!-- Score & Quick Toggles -->
+              <div class="flex flex-wrap items-center gap-3">
+                <div class="bg-stone-950 px-4 py-2.5 rounded-2xl border border-stone-800 flex items-center gap-3">
+                  <div class="text-right">
+                    <div class="text-[10px] uppercase font-bold text-stone-400">Live Compliance Score</div>
+                    <div class="text-lg font-black" [class]="stats.scorePercentage >= 90 ? 'text-emerald-400' : 'text-orange-400'">
+                      {{ stats.scorePercentage }}%
+                    </div>
+                  </div>
+                  <div class="w-10 h-10 rounded-xl bg-stone-900 flex items-center justify-center text-xs font-bold text-stone-300 border border-stone-800">
+                    {{ stats.yesCount }}/{{ stats.total }}
+                  </div>
+                </div>
+
+                <div class="flex items-center gap-2">
+                  <button
+                    type="button"
+                    (click)="markAll('Yes')"
+                    class="px-3.5 py-2.5 rounded-xl bg-emerald-500/20 hover:bg-emerald-500/30 text-emerald-300 font-bold text-xs border border-emerald-500/40 transition-colors flex items-center gap-1 cursor-pointer"
+                  >
+                    <mat-icon class="!text-sm !w-4 !h-4">done_all</mat-icon>
+                    Mark All Yes (Compliant)
+                  </button>
+
+                  <button
+                    type="button"
+                    (click)="markAll('No')"
+                    class="px-3 py-2.5 rounded-xl bg-stone-800 hover:bg-stone-700 text-stone-300 font-medium text-xs border border-stone-700 transition-colors cursor-pointer"
+                    title="Reset checklist"
+                  >
+                    Reset
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            <!-- Site & Supervisor Meta Form Fields -->
+            <!-- <form [formGroup]="inspectionForm" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 text-xs">
+              <div class="space-y-1">
+                <label for="inspect-project" class="font-bold text-stone-300 uppercase tracking-wider">Project / Site Name</label>
+                <select
+                  id="inspect-project"
+                  formControlName="projectName"
+                  class="w-full bg-stone-950 border border-stone-700 rounded-xl px-3 py-2.5 text-white font-medium focus:outline-none focus:border-orange-500"
+                >
+                  @for (p of constructionService.projects(); track p.id) {
+                    <option [value]="p.name">{{ p.name }}</option>
+                  }
+                </select>
+              </div>
+
+              <div class="space-y-1">
+                <label for="inspect-site-location" class="font-bold text-stone-300 uppercase tracking-wider">Site Location / Zone</label>
+                <input
+                  id="inspect-site-location"
+                  type="text"
+                  formControlName="siteLocation"
+                  placeholder="Sector 4, Core Zone"
+                  class="w-full bg-stone-950 border border-stone-700 rounded-xl px-3 py-2.5 text-white focus:outline-none focus:border-orange-500"
+                />
+              </div>
+
+              <div class="space-y-1">
+                <label for="inspect-date" class="font-bold text-stone-300 uppercase tracking-wider">Audit Inspection Date</label>
+                <input
+                  id="inspect-date"
+                  type="date"
+                  formControlName="date"
+                  class="w-full bg-stone-950 border border-stone-700 rounded-xl px-3 py-2.5 text-white focus:outline-none focus:border-orange-500"
+                />
+              </div>
+
+              <div class="space-y-1">
+                <label for="inspect-hse-officer" class="font-bold text-stone-300 uppercase tracking-wider">HSE Officer In-Charge</label>
+                <input
+                  id="inspect-hse-officer"
+                  type="text"
+                  formControlName="hseOfficerName"
+                  class="w-full bg-stone-950 border border-stone-700 rounded-xl px-3 py-2.5 text-white font-semibold focus:outline-none focus:border-orange-500"
+                />
+              </div>
+            </form> -->
+          </div>
+
+          <!-- THE 8 CHECKLIST CATEGORIES TABLE -->
+          <div class="bg-stone-900 border border-stone-800 rounded-3xl overflow-hidden shadow-2xl">
+            <!-- Table Header -->
+            <div class="grid grid-cols-12 bg-stone-950 px-6 py-3.5 border-b border-stone-800 text-xs font-bold uppercase tracking-wider text-stone-400">
+              <div class="col-span-2 sm:col-span-1 text-center">Sl No</div>
+              <div class="col-span-6 sm:col-span-8">Daily Site HSE Inspection</div>
+              <div class="col-span-4 sm:col-span-3 text-center">Compliance Status</div>
+            </div>
+
+            <!-- Categories Loop -->
+            <div class="divide-y divide-stone-800">
+              @for (category of checklistCategories; track category.categoryNumber) {
+                <!-- Category Banner Row -->
+                <div class="bg-stone-800/80 px-6 py-3 flex items-center justify-between border-t border-b border-stone-700">
+                  <div class="flex items-center gap-3">
+                    <span class="w-7 h-7 rounded-lg bg-orange-600 text-white font-black text-xs flex items-center justify-center">
+                      {{ category.categoryNumber }}
+                    </span>
+                    <h3 class="font-display font-extrabold text-sm sm:text-base text-white tracking-wide">
+                      {{ category.categoryName }}
+                    </h3>
+                  </div>
+                  <span class="text-xs text-stone-400 font-semibold">{{ category.items.length }} checkpoints</span>
+                </div>
+
+                <!-- Category Items Loop -->
+                <div class="divide-y divide-stone-800/60">
+                  @for (item of category.items; track item.id) {
+                    <div
+                      class="grid grid-cols-12 px-6 py-3.5 items-center gap-2 hover:bg-stone-850 transition-colors"
+                      [class.bg-red-950/20]="checklistAnswers()[item.id] === 'No'"
+                    >
+                      <!-- Sl No -->
+                      <div class="col-span-2 sm:col-span-1 text-center font-mono font-bold text-xs text-orange-400">
+                        {{ item.id }}
+                      </div>
+
+                      <!-- Question Text -->
+                      <div class="col-span-6 sm:col-span-8 text-xs sm:text-sm text-stone-200 leading-relaxed pr-2">
+                        {{ item.text }}
+                      </div>
+
+                      <!-- Yes / No Toggles -->
+                      <div class="col-span-4 sm:col-span-3 flex items-center justify-center gap-2">
+                        <button
+                          type="button"
+                          (click)="setAnswer(item.id, 'Yes')"
+                          [class]="checklistAnswers()[item.id] === 'Yes' ? 'bg-emerald-500 text-slate-950 font-bold shadow-md shadow-emerald-500/20 border-emerald-400' : 'bg-stone-950 text-stone-400 hover:text-white border-stone-800'"
+                          class="flex-1 max-w-[80px] py-1.5 px-2.5 rounded-lg text-xs font-semibold border transition-all flex items-center justify-center gap-1 cursor-pointer"
+                        >
+                          <mat-icon class="!text-sm !w-4 !h-4">check</mat-icon>
+                          Yes
+                        </button>
+
+                        <button
+                          type="button"
+                          (click)="setAnswer(item.id, 'No')"
+                          [class]="checklistAnswers()[item.id] === 'No' ? 'bg-red-500 text-white font-bold shadow-md shadow-red-500/30 border-red-400' : 'bg-stone-950 text-stone-400 hover:text-white border-stone-800'"
+                          class="flex-1 max-w-[80px] py-1.5 px-2.5 rounded-lg text-xs font-semibold border transition-all flex items-center justify-center gap-1 cursor-pointer"
+                        >
+                          <mat-icon class="!text-sm !w-4 !h-4">close</mat-icon>
+                          No
+                        </button>
+                      </div>
+                    </div>
+                  }
+                </div>
+              }
+            </div>
+          </div>
+
+          <!-- Footer Metadata & Signature Form -->
+          <div class="bg-stone-900 border border-stone-800 rounded-3xl p-6 lg:p-8 space-y-6 shadow-xl" [formGroup]="inspectionForm">
+            <h3 class="font-display text-lg font-bold text-white border-b border-stone-800 pb-3 flex items-center gap-2">
+              <mat-icon class="!text-orange-400">draw</mat-icon>
+              Supervisor Sign-Off & Verification
+            </h3>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 text-xs">
+              <!-- Supervisor Info -->
+              <div class="space-y-3 bg-stone-950 p-4 rounded-2xl border border-stone-800">
+                <div class="text-orange-400 font-bold uppercase tracking-wider">Supervisor Details</div>
+                <div>
+                  <span class="text-stone-500 block">Supervisor Name:</span>
+                  <input
+                    type="text"
+                    formControlName="supervisorName"
+                    class="w-full bg-stone-900 border border-stone-700 rounded-lg px-3 py-2 text-white font-semibold mt-1"
+                  />
+                </div>
+                <div>
+                  <span class="text-stone-500 block">Designation:</span>
+                  <input
+                    type="text"
+                    formControlName="designation"
+                    class="w-full bg-stone-900 border border-stone-700 rounded-lg px-3 py-2 text-white mt-1"
+                  />
+                </div>
+                <div>
+                  <span class="text-stone-500 block">Computer / Badge No:</span>
+                  <input
+                    type="text"
+                    formControlName="computerNo"
+                    class="w-full bg-stone-900 border border-stone-700 rounded-lg px-3 py-2 text-orange-300 font-mono font-bold mt-1"
+                  />
+                </div>
+              </div>
+
+              <!-- HSE Officer Contact & Notification Config -->
+              <div class="space-y-3 bg-stone-950 p-4 rounded-2xl border border-stone-800">
+                <div class="text-orange-400 font-bold uppercase tracking-wider">HSE Officer Dispatch Target</div>
+                <div>
+                  <span class="text-stone-500 block">HSE Officer Name:</span>
+                  <input
+                    type="text"
+                    formControlName="hseOfficerName"
+                    class="w-full bg-stone-900 border border-stone-700 rounded-lg px-3 py-2 text-white font-semibold mt-1"
+                  />
+                </div>
+                <div>
+                  <span class="text-stone-500 block">Officer Direct Email:</span>
+                  <input
+                    type="email"
+                    formControlName="hseOfficerEmail"
+                    class="w-full bg-stone-900 border border-stone-700 rounded-lg px-3 py-2 text-white font-mono mt-1"
+                  />
+                </div>
+                <div>
+                  <span class="text-stone-500 block">Officer WhatsApp / Phone:</span>
+                  <input
+                    type="text"
+                    formControlName="hseOfficerWhatsapp"
+                    class="w-full bg-stone-900 border border-stone-700 rounded-lg px-3 py-2 text-emerald-300 font-mono font-bold mt-1"
+                  />
+                </div>
+              </div>
+
+              <!-- Adherence & Digital Signature -->
+              <div class="space-y-3 bg-stone-950 p-4 rounded-2xl border border-stone-800 flex flex-col justify-between">
+                <div>
+                  <div class="text-orange-400 font-bold uppercase tracking-wider mb-2">PPE Adherence Status</div>
+                  <div class="flex items-center gap-4">
+                    <label class="flex items-center gap-2 cursor-pointer">
+                      <input
+                        type="radio"
+                        value="Yes"
+                        formControlName="ppeAdherence"
+                        class="accent-orange-600"
+                      />
+                      <span class="text-sm font-semibold text-white">Yes (100% Compliant)</span>
+                    </label>
+                    <label class="flex items-center gap-2 cursor-pointer">
+                      <input
+                        type="radio"
+                        value="No"
+                        formControlName="ppeAdherence"
+                        class="accent-red-500"
+                      />
+                      <span class="text-sm font-semibold text-white">No (Breach Observed)</span>
+                    </label>
+                  </div>
+                </div>
+
+                <div>
+                  <span class="text-stone-500 block mb-1">Supervisor Electronic Signature:</span>
+                  <input
+                    type="text"
+                    formControlName="signatureText"
+                    class="w-full bg-stone-900 border border-stone-700 rounded-lg px-3 py-2 text-white font-serif italic"
+                  />
+                </div>
+              </div>
+            </div>
+
+            <!-- Corrective Actions & Remarks -->
+            <!-- <div class="space-y-2">
+              <label for="inspect-corrective-actions" class="text-xs font-bold text-stone-300 uppercase tracking-wider block">
+                Supervisor Observations & Corrective Actions Needed:
+              </label>
+              <textarea
+                id="inspect-corrective-actions"
+                formControlName="correctiveActions"
+                rows="3"
+                placeholder="Detail any site hazards found, corrective actions assigned to subcontractors, or plant certifications inspected..."
+                class="w-full bg-stone-950 border border-stone-700 rounded-xl p-3 text-xs sm:text-sm text-white placeholder-stone-500 focus:outline-none focus:border-orange-500"
+              ></textarea>
+            </div> -->
+
+            <!-- PRIMARY SUBMISSION AND PDF DOWNLOAD BUTTONS -->
+            <div class="flex flex-col sm:flex-row items-center justify-end gap-4 pt-4 border-t border-stone-800  text-right">
+              <!-- <div class="text-xs text-stone-400">
+                Audit is archived locally in Node.js server. No MongoDB required.
+              </div> -->
+
+              <div class="flex flex-wrap gap-3 w-full sm:w-auto">
+                <!-- PDF Download Button -->
+                <button
+                  type="button"
+                  (click)="downloadPdf()"
+                  class="flex-1 sm:flex-initial px-5 py-3.5 rounded-xl bg-stone-800 hover:bg-stone-700 text-orange-300 font-bold text-xs sm:text-sm border border-orange-500/40 transition-all flex items-center justify-center gap-2 shadow-lg cursor-pointer"
+                >
+                  <mat-icon class="!text-orange-400">picture_as_pdf</mat-icon>
+                  Download Saved PDF
+                </button>
+
+                <!-- Submit & Dispatch Button -->
+                <button
+                  type="button"
+                  (click)="submitInspection()"
+                  [disabled]="isSubmitting()"
+                  class="flex-1 sm:flex-initial px-6 py-3.5 rounded-xl bg-orange-600 hover:bg-orange-500 disabled:opacity-50 text-white font-black text-xs sm:text-sm transition-all flex items-center justify-center gap-2 shadow-xl shadow-orange-600/25 cursor-pointer"
+                >
+                  <mat-icon class="!text-white">send</mat-icon>
+                  {{ isSubmitting() ? 'Submitting...' : 'Submit & Send to HSE Officer' }}
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      }
+
+      <!-- TAB 2: SUBMISSIONS HISTORY -->
+      @if (activeTab() === 'submissions') {
+        <div class="bg-stone-900 border border-stone-800 rounded-3xl p-6 lg:p-8 space-y-6 shadow-xl">
+          <div class="flex items-center justify-between border-b border-stone-800 pb-4">
+            <div>
+              <h2 class="text-xl font-bold font-display text-white">Archived Site HSE Inspections</h2>
+              <p class="text-xs text-stone-400">Historical records submitted by supervisors across all project sites.</p>
+            </div>
+            <button
+              type="button"
+              (click)="constructionService.fetchSubmissions()"
+              class="px-3 py-1.5 rounded-lg bg-stone-800 hover:bg-stone-700 text-xs text-stone-300 flex items-center gap-1 cursor-pointer"
+            >
+              <mat-icon class="!text-xs !w-3.5 !h-3.5">refresh</mat-icon>
+              Refresh
+            </button>
+          </div>
+
+          @if (constructionService.recentSubmissions().length === 0) {
+            <div class="text-center py-16 space-y-3">
+              <mat-icon class="!text-5xl !w-12 !h-12 text-stone-700">history_edu</mat-icon>
+              <p class="text-stone-400 text-sm">No inspections recorded yet today.</p>
+              <button
+                type="button"
+                (click)="activeTab.set('active-form')"
+                class="px-4 py-2 rounded-xl bg-orange-600 hover:bg-orange-500 text-white font-bold text-xs cursor-pointer"
+              >
+                Complete First HSE Inspection
+              </button>
+            </div>
+          } @else {
+            <div class="divide-y divide-stone-800">
+              @for (sub of constructionService.recentSubmissions(); track sub.id) {
+                <div class="py-4 flex flex-col md:flex-row md:items-center justify-between gap-4">
+                  <div class="space-y-1">
+                    <div class="flex items-center gap-2">
+                      <span class="text-xs font-bold font-mono text-orange-400">{{ sub.id }}</span>
+                      <span class="px-2 py-0.5 rounded text-[10px] font-bold bg-stone-800 text-stone-300">
+                        {{ sub.formCode }}
+                      </span>
+                      <span class="px-2 py-0.5 rounded text-[10px] font-bold bg-emerald-950 text-emerald-400 border border-emerald-500/30">
+                        {{ sub.stats?.scorePercentage ?? 100 }}% Score
+                      </span>
+                    </div>
+                    <h4 class="text-sm font-bold text-white">{{ sub.projectName }}</h4>
+                    <p class="text-xs text-stone-400">
+                      Audit Date: <strong class="text-stone-200">{{ sub.date }}</strong> • Supervisor: <strong class="text-stone-200">{{ sub.supervisorName }}</strong> ({{ sub.computerNo }}) • HSE Officer: {{ sub.hseOfficerName }}
+                    </p>
+                  </div>
+
+                  <!-- Action buttons -->
+                  <div class="flex items-center gap-2">
+                    <button
+                      type="button"
+                      (click)="downloadSubmissionPdf(sub)"
+                      class="px-3 py-1.5 rounded-lg bg-stone-800 hover:bg-stone-700 text-orange-300 text-xs font-semibold border border-stone-700 flex items-center gap-1 cursor-pointer"
+                    >
+                      <mat-icon class="!text-xs !w-3.5 !h-3.5 text-orange-400">download</mat-icon>
+                      PDF
+                    </button>
+
+                    <a
+                      [href]="constructionService.generateWhatsAppUrl(sub)"
+                      target="_blank"
+                      class="px-3 py-1.5 rounded-lg bg-emerald-950 hover:bg-emerald-900 text-emerald-300 text-xs font-semibold border border-emerald-500/30 flex items-center gap-1"
+                    >
+                      <mat-icon class="!text-xs !w-3.5 !h-3.5">chat</mat-icon>
+                      WhatsApp
+                    </a>
+
+                    <a
+                      [href]="constructionService.generateMailtoUrl(sub)"
+                      class="px-3 py-1.5 rounded-lg bg-blue-950 hover:bg-blue-900 text-blue-300 text-xs font-semibold border border-blue-500/30 flex items-center gap-1"
+                    >
+                      <mat-icon class="!text-xs !w-3.5 !h-3.5">mail</mat-icon>
+                      Email
+                    </a>
+                  </div>
+                </div>
+              }
+            </div>
+          }
+        </div>
+      }
+
+      <!-- TAB 3: FORM HUB & FUTURE UPDATION -->
+      @if (activeTab() === 'forms-catalog') {
+        <div class="bg-stone-900 border border-stone-800 rounded-3xl p-6 lg:p-8 space-y-6 shadow-xl">
+          <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-stone-800 pb-4">
+            <div>
+              <div class="inline-flex items-center gap-1 text-xs font-bold text-orange-400 uppercase tracking-wider mb-1">
+                <mat-icon class="!text-orange-400 !text-sm !w-4 !h-4">library_add</mat-icon>
+                Extensible Safety Hub
+              </div>
+              <h2 class="text-xl font-bold font-display text-white">Forms Registry & Future Updation</h2>
+              <p class="text-xs text-stone-400">
+                Easily activate, manage, or add new inspection templates as company HSE regulations expand.
+              </p>
+            </div>
+
+            <button
+              type="button"
+              (click)="showNewFormModal.set(true)"
+              class="px-4 py-2.5 rounded-xl bg-orange-600 hover:bg-orange-500 text-white font-bold text-xs transition-colors flex items-center gap-1.5 shadow-lg shadow-orange-600/20 cursor-pointer"
+            >
+              <mat-icon class="!text-sm !w-4 !h-4">add_circle</mat-icon>
+              + Register New Form Template
+            </button>
+          </div>
+
+          <!-- Forms Grid -->
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            @for (form of constructionService.formTemplates(); track form.id) {
+              <div class="bg-stone-950 p-6 rounded-2xl border border-stone-800 hover:border-orange-500/40 transition-all flex flex-col justify-between space-y-4">
+                <div>
+                  <div class="flex items-center justify-between gap-2 mb-2">
+                    <span class="text-xs font-mono font-bold text-orange-400">{{ form.code }}</span>
+                    <span class="px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-orange-600/10 text-orange-300 border border-orange-500/30">
+                      {{ form.badge }}
+                    </span>
+                  </div>
+                  <h3 class="text-lg font-bold text-white font-display">{{ form.title }}</h3>
+                  <div class="text-xs text-stone-500 font-semibold mt-0.5">{{ form.category }}</div>
+                  <p class="text-xs text-stone-300 mt-3 leading-relaxed">
+                    {{ form.description }}
+                  </p>
+                </div>
+
+                <div class="pt-4 border-t border-stone-850 flex items-center justify-between">
+                  <span class="text-xs text-stone-400 font-medium flex items-center gap-1">
+                    <mat-icon class="!text-xs !w-3.5 !h-3.5 text-orange-400">check_box</mat-icon>
+                    {{ form.totalItems }} Checkpoints
+                  </span>
+
+                  @if (form.id === 'hse-inspection-daily') {
+                    <button
+                      type="button"
+                      (click)="activeTab.set('active-form')"
+                      class="px-3.5 py-1.5 rounded-lg bg-orange-600 hover:bg-orange-500 text-white font-bold text-xs flex items-center gap-1 cursor-pointer"
+                    >
+                      Open Form
+                    </button>
+                  } @else {
+                    <button
+                      type="button"
+                      (click)="activeTab.set('active-form')"
+                      class="px-3.5 py-1.5 rounded-lg bg-stone-800 hover:bg-stone-700 text-stone-300 text-xs font-semibold flex items-center gap-1 cursor-pointer"
+                    >
+                      Use Template
+                    </button>
+                  }
+                </div>
+              </div>
+            }
+          </div>
+        </div>
+      }
+    }
+  </div>
+</div>
+
+<!-- SUCCESS & DISPATCH MODAL -->
+@if (showDispatchModal(); as visible) {
+  <div class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-stone-950/85 backdrop-blur-md animate-fade-in">
+    <div class="bg-stone-900 border border-stone-700 rounded-3xl max-w-lg w-full p-6 sm:p-8 shadow-2xl text-white space-y-5 max-h-[90vh] overflow-y-auto">
+      <div class="text-center space-y-2">
+        <div class="w-14 h-14 rounded-2xl bg-emerald-500/10 border border-emerald-500/30 text-emerald-400 mx-auto flex items-center justify-center">
+          <mat-icon class="!text-3xl !w-8 !h-8">verified</mat-icon>
+        </div>
+        <h3 class="text-2xl font-bold font-display text-white">Inspection Submitted & PDF Saved!</h3>
+        <!-- <p class="text-xs text-stone-400 leading-relaxed">
+          Audit report <strong class="text-white">#{{ submittedRecord()?.id }}</strong> has been officially archived. The certified PDF has been generated and saved for dispatch to HSE Officer Elena Vance.
+        </p> -->
+      </div>
+
+      <!-- Saved PDF Document Badge -->
+      @if (savedPdfFilename(); as filename) {
+        <div class="p-3 rounded-2xl bg-orange-950/40 border border-orange-500/30 flex items-center justify-between gap-3 text-xs">
+          <div class="flex items-center gap-2.5 min-w-0">
+            <div class="w-9 h-9 rounded-xl bg-orange-600/20 text-orange-400 flex items-center justify-center shrink-0">
+              <mat-icon class="!text-lg !w-5 !h-5">picture_as_pdf</mat-icon>
+            </div>
+            <div class="truncate">
+              <div class="font-bold text-white truncate">{{ filename }}</div>
+              <div class="text-[11px] text-emerald-400 flex items-center gap-1 font-medium">
+                <mat-icon class="!text-xs !w-3.5 !h-3.5">check_circle</mat-icon>
+                Saved to Downloads & Ready to Send
+              </div>
+            </div>
+          </div>
+          <button
+            type="button"
+            (click)="previewPdf()"
+            class="px-2.5 py-1.5 rounded-lg bg-stone-800 hover:bg-stone-700 text-stone-200 text-[11px] font-semibold flex items-center gap-1 shrink-0 cursor-pointer border border-stone-700"
+            title="Preview PDF"
+          >
+            <mat-icon class="!text-xs !w-3.5 !h-3.5">visibility</mat-icon>
+            View
+          </button>
+        </div>
+      }
+
+      <!-- Quick Summary Card -->
+      @if (submittedRecord(); as rec) {
+        <div class="bg-stone-950 p-4 rounded-xl border border-stone-800 text-xs space-y-2">
+          <div class="flex justify-between">
+            <span class="text-stone-500">Project Site:</span>
+            <span class="font-bold text-stone-200 truncate ml-2 text-right">Maysan Development Phase I</span>
+          </div>
+          <div class="flex justify-between">
+            <span class="text-stone-500">Supervisor:</span>
+            <span class="font-medium text-stone-200">{{ rec.supervisorName }}</span>
+          </div>
+          <div class="flex justify-between">
+            <span class="text-stone-500">HSE Officer:</span>
+            <span class="font-medium text-stone-300">{{ rec.hseOfficerName }}</span>
+          </div>
+          <div class="flex justify-between pt-1 border-t border-stone-900">
+            <span class="text-stone-500">Compliance Rate:</span>
+            <span class="font-black text-emerald-400">{{ rec.stats?.scorePercentage ?? 100 }}%</span>
+          </div>
+        </div>
+      }
+
+      <!-- Status Alerts -->
+      @if (emailSentStatus()) {
+        <div class="p-2.5 rounded-xl bg-stone-950 border border-blue-500/40 text-blue-300 text-xs flex items-center gap-2">
+          <mat-icon class="!text-sm !w-4 !h-4 text-blue-400 shrink-0">mark_email_read</mat-icon>
+          <span>{{ emailSentStatus() }}</span>
+        </div>
+      }
+
+      <!-- Dispatch Action Grid -->
+      <div class="space-y-2.5">
+        <!-- Direct Native Share (Device Share Sheet with PDF File) -->
+        @if (canNativeShare()) {
+          <button
+            type="button"
+            (click)="sharePdfNative()"
+            class="w-full py-3 px-4 rounded-xl bg-stone-100 hover:bg-white text-stone-950 font-bold text-xs transition-all flex items-center justify-center gap-2 shadow-md cursor-pointer"
+          >
+            <mat-icon class="!text-base !w-4 !h-4 text-stone-950">share</mat-icon>
+            Share PDF File Directly (WhatsApp / AirDrop / Mail)
+          </button>
+        }
+
+        <!-- WhatsApp Dispatch -->
+        <!-- <button
+          type="button"
+          (click)="openWhatsApp()"
+          class="w-full py-3 px-4 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs transition-all flex items-center justify-center gap-2 shadow-lg shadow-emerald-600/20 cursor-pointer"
+        >
+          <mat-icon class="!text-base !w-4 !h-4">chat</mat-icon>
+          Send PDF & Audit Summary via WhatsApp
+        </button> -->
+
+        <!-- Email Dispatch via API (With PDF Attachment) -->
+        <button
+          type="button"
+          (click)="triggerSendEmail()"
+          class="w-full py-3 px-4 rounded-xl bg-blue-600 hover:bg-blue-500 text-white font-bold text-xs transition-all flex items-center justify-center gap-2 cursor-pointer"
+        >
+          <mat-icon class="!text-base !w-4 !h-4">email</mat-icon>
+          Dispatch Email to HSE Officer (With PDF Attached)
+        </button>
+
+        <!-- Fallback / Secondary Actions -->
+        <div class="grid grid-cols-2 gap-2 pt-1">
+          <button
+            type="button"
+            (click)="downloadPdf()"
+            class="py-2.5 px-3 rounded-xl bg-stone-800 hover:bg-stone-700 text-orange-300 font-semibold text-xs border border-orange-500/30 transition-all flex items-center justify-center gap-1.5 cursor-pointer"
+          >
+            <mat-icon class="!text-orange-400 !text-sm !w-4 !h-4">download</mat-icon>
+            Re-Download PDF
+          </button>
+
+          <button
+            type="button"
+            (click)="openMailto()"
+            class="py-2.5 px-3 rounded-xl bg-stone-800 hover:bg-stone-700 text-stone-300 font-semibold text-xs border border-stone-700 transition-all flex items-center justify-center gap-1.5 cursor-pointer"
+          >
+            <mat-icon class="!text-sm !w-4 !h-4">outgoing_mail</mat-icon>
+            Open Mail Client
+          </button>
+        </div>
+      </div>
+
+      <div class="pt-2 text-center">
+        <button
+          type="button"
+          (click)="closeDispatchModal()"
+          class="text-xs text-stone-400 hover:text-white transition-colors cursor-pointer"
+        >
+          Close & Return to Supervisor Dashboard
+        </button>
+      </div>
+    </div>
+  </div>
+}
+
+<!-- NEW FORM REGISTRATION MODAL (Future Updation) -->
+@if (showNewFormModal(); as modalOpen) {
+  <div class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-stone-950/80 backdrop-blur-sm animate-fade-in">
+    <div class="bg-stone-900 border border-stone-700 rounded-3xl max-w-lg w-full p-6 sm:p-8 shadow-2xl text-white space-y-5">
+      <div class="flex items-center justify-between border-b border-stone-800 pb-3">
+        <div class="flex items-center gap-2 text-orange-400">
+          <mat-icon>post_add</mat-icon>
+          <h3 class="text-lg font-bold font-display text-white">Register New Safety Form</h3>
+        </div>
+        <button
+          type="button"
+          (click)="showNewFormModal.set(false)"
+          class="text-stone-400 hover:text-white cursor-pointer"
+        >
+          <mat-icon>close</mat-icon>
+        </button>
+      </div>
+
+      <form [formGroup]="newFormGroup" (ngSubmit)="handleCreateNewForm()" class="space-y-4 text-xs">
+        <div class="space-y-1">
+          <label for="new-form-title" class="font-bold text-stone-300 uppercase tracking-wider">Form Title</label>
+          <input
+            id="new-form-title"
+            type="text"
+            formControlName="title"
+            placeholder="e.g., Excavation & Trenching Safety Permit"
+            class="w-full bg-stone-950 border border-stone-700 rounded-xl p-3 text-white text-sm focus:outline-none focus:border-orange-500"
+          />
+        </div>
+
+        <div class="grid grid-cols-2 gap-3">
+          <div class="space-y-1">
+            <label for="new-form-code" class="font-bold text-stone-300 uppercase tracking-wider">Form Code</label>
+            <input
+              id="new-form-code"
+              type="text"
+              formControlName="code"
+              placeholder="HSE-FRM-05"
+              class="w-full bg-stone-950 border border-stone-700 rounded-xl p-2.5 text-white focus:outline-none focus:border-orange-500"
+            />
+          </div>
+          <div class="space-y-1">
+            <label for="new-form-items" class="font-bold text-stone-300 uppercase tracking-wider">Estimated Items</label>
+            <input
+              id="new-form-items"
+              type="number"
+              formControlName="totalItems"
+              class="w-full bg-stone-950 border border-stone-700 rounded-xl p-2.5 text-white focus:outline-none focus:border-orange-500"
+            />
+          </div>
+        </div>
+
+        <div class="space-y-1">
+          <label for="new-form-category" class="font-bold text-stone-300 uppercase tracking-wider">Category</label>
+          <input
+            id="new-form-category"
+            type="text"
+            formControlName="category"
+            placeholder="High-Risk Activity / Civil Works"
+            class="w-full bg-stone-950 border border-stone-700 rounded-xl p-2.5 text-white focus:outline-none focus:border-orange-500"
+          />
+        </div>
+
+        <div class="space-y-1">
+          <label for="new-form-description" class="font-bold text-stone-300 uppercase tracking-wider">Scope & Audit Description</label>
+          <textarea
+            id="new-form-description"
+            formControlName="description"
+            rows="3"
+            placeholder="Mandatory pre-entry checklist verifying soil benching, shoring, atmospheric testing..."
+            class="w-full bg-stone-950 border border-stone-700 rounded-xl p-2.5 text-white focus:outline-none focus:border-orange-500"
+          ></textarea>
+        </div>
+
+        <div class="flex items-center justify-end gap-3 pt-3 border-t border-stone-800">
+          <button
+            type="button"
+            (click)="showNewFormModal.set(false)"
+            class="px-4 py-2.5 rounded-xl bg-stone-800 text-stone-300 font-semibold cursor-pointer"
+          >
+            Cancel
+          </button>
+          <button
+            type="submit"
+            class="px-5 py-2.5 rounded-xl bg-orange-600 hover:bg-orange-500 text-white font-bold cursor-pointer"
+          >
+            Register Template
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+}

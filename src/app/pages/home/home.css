@@ -1,0 +1,38 @@
+/* Styles specific to Home page */
+:host {
+  display: block;
+}
+.container-row {
+  display: flex;
+  justify-content: space-between; /* Spreads items evenly */
+  gap: 20px; /* Space between containers */
+}
+
+.container-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 30px;
+}
+
+.item-container {
+  width: 220px;
+  text-align: center;
+}
+
+.item-container img {
+  width: 220px;
+  height: 220px;
+  object-fit: contain;
+  border-radius: 50%;
+  border: 5px solid #ddd;
+  padding: 10px;
+  box-sizing: border-box;
+  background: white;
+}
+
+.name-label {
+  margin-top: 15px;
+  font-weight: bold;
+}
+

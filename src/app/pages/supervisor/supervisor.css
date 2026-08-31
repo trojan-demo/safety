@@ -1,0 +1,4 @@
+/* Styles for Supervisor Component */
+:host {
+  display: block;
+}
