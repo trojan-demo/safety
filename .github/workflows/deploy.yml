@@ -29,7 +29,7 @@ jobs:
         run: npm ci
 
       - name: Build Angular
-        run: npm run build
+        run: npx ng build --configuration production --base-href /safety/
 
       - name: Setup Pages
         uses: actions/configure-pages@v5
