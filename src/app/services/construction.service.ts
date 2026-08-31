@@ -286,9 +286,9 @@ Trojan Construction HSE Portal`);
         role: 'HSE Manager',
         experience: '26 Years Experience',
         bio: 'Chartered Civil & Structural Engineer overseeing apex engineering governance, major infrastructure bids, and corporate zero-harm policies across all construction sites.',
-        photo: 'https://images.unsplash.com/photo-1560250097-0b93528c311a?auto=format&fit=crop&w=600&q=80',
+        photo: '',
         certifications: ['PE Civil / Structural', 'Fellow ICE', 'MBA Project Management'],
-        contact: 'd.miller@apexbuild.com'
+        contact: 'xxxxxxxx@trojan.com'
       },
       {
         id: 'team-02',
@@ -296,9 +296,9 @@ Trojan Construction HSE Portal`);
         role: 'HSE Officer',
         experience: '18 Years Experience',
         bio: 'Specialist in modern steel-concrete composites, BIM level 3 modeling, and high-rise structural optimization with an emphasis on ergonomic and safe site ergonomics.',
-        photo: 'https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=600&q=80',
+        photo: '',
         certifications: ['AIA Registered', 'LEED AP BD+C', 'BIM Coordinator Cert'],
-        contact: 's.jenkins@apexbuild.com'
+        contact: 'xxxxxxxx@trojan.com'
       },
       {
         id: 'team-03',
@@ -306,9 +306,9 @@ Trojan Construction HSE Portal`);
         role: 'Senior Site Operations & Heavy Plant Manager',
         experience: '19 Years Experience',
         bio: 'Directs on-site plant operations, tower crane logistics, ground engineering, and rigorous daily mechanical lifting inspections across active work fronts.',
-        photo: 'https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?auto=format&fit=crop&w=600&q=80',
+        photo: '',
         certifications: ['CPCS Appointed Person', 'GoK Plant Inspector', 'IOSH Managing Safely'],
-        contact: 'm.sterling@apexbuild.com'
+        contact: 'xxxxxxxx@trojan.com'
       },
       {
         id: 'team-04',
@@ -316,9 +316,9 @@ Trojan Construction HSE Portal`);
         role: 'Chief HSE & Compliance Officer',
         experience: '15 Years Experience',
         bio: 'Leads company-wide health, safety, and environmental auditing. Oversees daily site inspections, supervisor compliance workflows, and ISO 45001 safety governance.',
-        photo: 'https://images.unsplash.com/photo-1580489944761-15a19d654956?auto=format&fit=crop&w=600&q=80',
+        photo: '',
         certifications: ['NEBOSH Diploma', 'CMIOSH Chartered', 'ISO 45001 / 14001 Lead Auditor'],
-        contact: 'nimishanoush@gmail.com',
+        contact: 'xxxxxxxx@trojan.com',
         whatsapp: '+18005550199'
       }
     ];
@@ -369,3 +369,4 @@ Trojan Construction HSE Portal`);
     ];
   }
 }
+
