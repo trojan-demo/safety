@@ -49,7 +49,7 @@ import { AuthService } from '../../services/auth.service';
               <!-- Logo -->
               <div class="w-9 h-9 sm:w-10 sm:h-10 shrink-0 flex items-center justify-center">
   <img
-    src="/trojanlogo.png"
+    src="trojanlogo.png"
     alt="Trojan Construction logo"
     class="w-full h-full object-contain"
   />
