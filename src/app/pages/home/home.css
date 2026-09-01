@@ -1,38 +1,118 @@
 /* Styles specific to Home page */
+
 :host {
   display: block;
-}
-.container-row {
-  display: flex;
-  justify-content: space-between; /* Spreads items evenly */
-  gap: 20px; /* Space between containers */
+  width: 100%;
+  max-width: 100%;
+  overflow-x: hidden;
 }
 
+/* =========================================
+   OUR TEAM / PROJECT PARTNERS
+   ========================================= */
+
 .container-row {
-  display: flex;
-  justify-content: space-between;
-  align-items: flex-start;
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
   gap: 30px;
+  width: 100%;
+  max-width: 100%;
+  align-items: start;
 }
 
 .item-container {
-  width: 220px;
+  width: 100%;
+  min-width: 0;
   text-align: center;
 }
 
 .item-container img {
-  width: 220px;
-  height: 220px;
+  width: 100%;
+  max-width: 220px;
+  aspect-ratio: 1 / 1;
+  height: auto;
   object-fit: contain;
   border-radius: 50%;
   border: 5px solid #ddd;
   padding: 10px;
   box-sizing: border-box;
   background: white;
+  display: block;
+  margin: 0 auto;
 }
 
 .name-label {
   margin-top: 15px;
   font-weight: bold;
+  font-size: 1rem;
+  line-height: 1.2;
+  text-align: center;
+  white-space: normal;
+  overflow-wrap: break-word;
 }
 
+
+/* =========================================
+   TABLET
+   ========================================= */
+
+@media (max-width: 1024px) {
+
+  .container-row {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 30px 20px;
+  }
+
+  .item-container img {
+    max-width: 200px;
+  }
+
+}
+
+
+/* =========================================
+   MOBILE
+   ========================================= */
+
+@media (max-width: 640px) {
+
+  .container-row {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 28px 16px;
+  }
+
+  .item-container img {
+    width: min(100%, 150px);
+    max-width: 150px;
+    border-width: 4px;
+    padding: 8px;
+  }
+
+  .name-label {
+    margin-top: 10px;
+    font-size: 0.85rem;
+  }
+
+}
+
+
+/* =========================================
+   SMALL MOBILE
+   ========================================= */
+
+@media (max-width: 380px) {
+
+  .container-row {
+    grid-template-columns: 1fr;
+    gap: 30px;
+  }
+
+  .item-container img {
+    max-width: 180px;
+  }
+
+  .name-label {
+    font-size: 0.9rem;
+  }
+
+}
