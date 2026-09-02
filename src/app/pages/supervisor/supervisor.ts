@@ -5,7 +5,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { AuthService } from '../../services/auth.service';
 import { ConstructionService } from '../../services/construction.service';
 import { PdfExportService } from '../../services/pdf-export.service';
-import { ChecklistCategory, FormTemplate, HSE_INSPECTION_CHECKLIST_DATA, HseInspectionSubmission } from '../../models/construction.model';
+import { ChecklistCategory, FormTemplate, HSE_INSPECTION_CHECKLIST_DATA, HseInspectionSubmission, SupervisorUser } from '../../models/construction.model';
 
 @Component({
   selector: 'app-supervisor',
@@ -24,28 +24,33 @@ export class SupervisorComponent {
   // Active view tab: 'active-form' | 'submissions' | 'forms-catalog'
   readonly activeTab = signal<'active-form' | 'submissions' | 'forms-catalog'>('active-form');
 
+  // Supervisor Roster for login selection
+  readonly showRosterModal = signal<boolean>(false);
+  readonly selectedSupervisorEmail = signal<string>('savad.salim@trojan.ae');
+
   // Login form
   readonly loginForm = new FormGroup({
-    username: new FormControl('', { nonNullable: true, validators: [Validators.required] }),
-    password: new FormControl('', { nonNullable: true, validators: [Validators.required] })
+    username: new FormControl('savad.salim@trojan.ae', { nonNullable: true, validators: [Validators.required] }),
+    password: new FormControl('TrojanSafety#2026', { nonNullable: true, validators: [Validators.required] })
   });
 
   readonly loginErrorMessage = signal<string>('');
 
   // HSE Inspection Form Controls
   readonly inspectionForm = new FormGroup({
-    projectName: new FormControl('SkyTower Commercial Complex & Transit Plaza', { nonNullable: true, validators: [Validators.required] }),
+    
+    Language: new FormControl('SkyTower Commercial Complex & Transit Plaza', { nonNullable: true, validators: [Validators.required] }),
     siteLocation: new FormControl('Downtown Financial District, Sector 4', { nonNullable: true }),
     date: new FormControl(new Date().toISOString().split('T')[0], { nonNullable: true, validators: [Validators.required] }),
-    supervisorName: new FormControl('Trojan Safety', { nonNullable: true, validators: [Validators.required] }),
-    designation: new FormControl('Senior Site Operations & HSE Supervisor', { nonNullable: true }),
+    supervisorName: new FormControl('Savad Mohamed Salim', { nonNullable: true, validators: [Validators.required] }),
+    designation: new FormControl('', { nonNullable: true }),
     computerNo: new FormControl('SUP-8849', { nonNullable: true, validators: [Validators.required] }),
     hseOfficerName: new FormControl('Savad Mohamed Salim', { nonNullable: true }),
-    hseOfficerEmail: new FormControl('nimishanoush@gmail.com', { nonNullable: true, validators: [Validators.email] }),
-    hseOfficerWhatsapp: new FormControl('+971568056045', { nonNullable: true }),
+    hseOfficerEmail: new FormControl('savad.salim@trojan.ae', { nonNullable: true, validators: [Validators.email] }),
+    hseOfficerWhatsapp: new FormControl('+0000000000', { nonNullable: true }),
     ppeAdherence: new FormControl<'Yes' | 'No'>('Yes', { nonNullable: true }),
     correctiveActions: new FormControl('', { nonNullable: true }),
-    signatureText: new FormControl('Trojan Safety (Digitally Verified)', { nonNullable: true })
+    signatureText: new FormControl('Savad Mohamed Salim (Digitally Verified)', { nonNullable: true })
   });
 
   // State of checklist items: e.g. { "1.1": "Yes", "1.2": "Yes", ... }
@@ -103,18 +108,36 @@ export class SupervisorComponent {
     } else {
       const user = this.authService.currentSupervisor();
       if (user) {
+        console.log(user,'usererrrrrrrrrrr');
+        
+        this.selectedSupervisorEmail.set(user.email);
         this.inspectionForm.patchValue({
-          supervisorName: user.name,
+          supervisorName: `${user.firstName} ${user.surname}`,
           designation: user.designation,
           computerNo: user.computerNo,
-          projectName: user.assignedSite
+          Language: user.Language,
+          signatureText: `${user.firstName} ${user.surname} (${user.designation})`
         });
       }
     }
   }
 
-  handleDemoLogin() {
-    const demo = this.authService.demoFill();
+  selectSupervisorForLogin(supervisor: SupervisorUser) {
+    this.selectedSupervisorEmail.set(supervisor.email);
+    this.loginForm.patchValue({
+      username: supervisor.email,
+      password: this.authService.SHARED_SUPERVISOR_PASSWORD
+    });
+    this.loginErrorMessage.set('');
+  }
+
+  quickLoginAsSupervisor(supervisor: SupervisorUser) {
+    this.selectSupervisorForLogin(supervisor);
+    this.handleLogin();
+  }
+
+  handleDemoLogin(email?: string) {
+    const demo = this.authService.demoFill(email || this.selectedSupervisorEmail());
     this.loginForm.setValue({
       username: demo.username,
       password: demo.password
@@ -172,9 +195,9 @@ export class SupervisorComponent {
     return {
       id: `HSE-${Date.now()}`,
       timestamp: new Date().toISOString(),
-      formTitle: 'Daily HSE Inspection',
+      formTitle: 'Supervisor Site HSE Inspection',
       formCode: 'HSE-FRM-01',
-      projectName: formVals.projectName,
+      Language: formVals.Language,
       siteLocation: formVals.siteLocation,
       date: formVals.date,
       supervisorName: formVals.supervisorName,

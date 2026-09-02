@@ -81,14 +81,14 @@ const projectsData = [
     startDate: 'June 2024',
     completionDate: 'March 2027',
     safeHours: '250,000+ Safe Man-Hours',
-    // image: 'https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?auto=format&fit=crop&w=1200&q=80',
+    image: 'https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?auto=format&fit=crop&w=1200&q=80',
     description: '36-story waterfront residential development with cantilevered sky gardens, modular pre-cast facades, and wind-tunnel certified structural envelope.',
     highlights: ['Smart Building Automation', 'Fall Arrest & Safety Netting Systems', 'Full Edge-Protection Standard Compliance']
   }
 ];
 
 const teamMembers = [
-  {
+   {
     id: 'team-01',
     name: 'Aswin Kumar Panigrahi',
     role: 'HSE Manager',
@@ -96,7 +96,7 @@ const teamMembers = [
     bio: 'Chartered Civil & Structural Engineer overseeing apex engineering governance, major infrastructure bids, and corporate zero-harm policies across all construction sites.',
     // photo: 'https://images.unsplash.com/photo-1560250097-0b93528c311a?auto=format&fit=crop&w=600&q=80',
     certifications: ['PE Civil / Structural', 'Fellow ICE', 'MBA Project Management'],
-    contact: 'xxxxxxxx@trojan.com'
+    contact: 'xxxxxxxx@trojan.ae'
   },
   {
     id: 'team-02',
@@ -106,7 +106,7 @@ const teamMembers = [
     bio: 'Specialist in modern steel-concrete composites, BIM level 3 modeling, and high-rise structural optimization with an emphasis on ergonomic and safe site ergonomics.',
     // photo: 'https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=600&q=80',
     certifications: ['AIA Registered', 'LEED AP BD+C', 'BIM Coordinator Cert'],
-     contact: 'xxxxxxxx@trojan.com'
+     contact: 'xxxxxxxx@trojan.ae'
   },
   {
     id: 'team-03',
@@ -116,25 +116,23 @@ const teamMembers = [
     bio: 'Directs on-site plant operations, tower crane logistics, ground engineering, and rigorous daily mechanical lifting inspections across active work fronts.',
     // photo: 'https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?auto=format&fit=crop&w=600&q=80',
     // certifications: ['CPCS Appointed Person', 'GoK Plant Inspector', 'IOSH Managing Safely'],
-    contact: 'xxxxxxxx@trojan.com'
+    contact: 'xxxxxxxx@trojan.ae'
   },
   {
     id: 'team-04',
-    // name: 'Elena Vance, CMIOSH',
-    // role: 'Chief HSE & Compliance Officer',
+    name: 'xxxx',
+    role: 'xxxxx',
     experience: '15 Years Experience',
     bio: 'Leads company-wide health, safety, and environmental auditing. Oversees daily site inspections, supervisor compliance workflows, and ISO 45001 safety governance.',
-    // photo: 'https://images.unsplash.com/photo-1580489944761-15a19d654956?auto=format&fit=crop&w=600&q=80',
     certifications: ['NEBOSH Diploma', 'CMIOSH Chartered', 'ISO 45001 / 14001 Lead Auditor'],
-     contact: 'xxxxxxxx@trojan.com',
-    whatsapp: '+18005550199'
+    contact: 'xxxxxxxx',
   }
 ];
 
 const formsCatalog = [
   {
     id: 'hse-inspection-daily',
-    title: 'Daily HSE Inspection FRM-01',
+    title: 'Supervisor Site HSE Inspection',
     code: 'HSE-FRM-01',
     category: 'Daily Operations & Safety Auditing',
     description: 'Mandatory daily site HSE inspection checklist covering Housekeeping, Scaffolding, Plant & Equipment, PPE, Site Services, Fire Safety, Health & Welfare, and Environmental management.',
@@ -196,7 +194,97 @@ interface StoredContactInquiry {
 const submittedInspections: StoredInspectionRecord[] = [];
 const contactInquiries: StoredContactInquiry[] = [];
 
+const supervisorsData = [
+{
+      id: 'EMP-001',
+      firstName: 'Basiouny',
+      surname: '',
+      name: 'Basiouny',
+      email: 'basiouny@trojan.ae',
+      usernameAlias: 'foreman01@trojan.ae',
+      designation: 'Foreman',
+      computerNo: 'EMP-8849',
+      Language: 'Arabic,English,Hindi',
+      contractorName: 'TGC',
+      // phone: '+1 (555) 234-8849',
+      role: 'Foreman'
+    },
+    {
+      id: 'EMP-002',
+      firstName: 'Rehmat',
+      surname: 'Ali',
+      name: 'Rehmat Ali',
+      email: 'rehmat.ali@trojan.ae',
+      usernameAlias: 'foreman02`@trojan.ae',
+      designation: 'Foreman',
+      computerNo: 'EMP-8850',
+      Language: 'Bhojpuri + Hindi + English ',
+      contractorName: 'TGC',
+      // phone: '+1 (555) 234-8850',
+      role: 'Foreman'
+    },
+    {
+      id: 'EMP-003',
+      firstName: 'Rahid',
+      surname: '',
+      name: 'Rahid ',
+      email: 'rahid@trojan.ae',
+      usernameAlias: 'foreman03@trojan.ae',
+      designation: 'Foreman',
+      computerNo: 'EMP-8851',
+      Language: 'Pashto + Urdu',
+      contractorName:  'TGC',
+      // phone: '+1 (555) 234-8851',
+      role:'Foreman'
+    },
+    {
+      id: 'EMP-004',
+      firstName: 'Rahil',
+      surname: '',
+      name: 'Rahil',
+      email: 'rahil@trojan.ae',
+      usernameAlias: 'foreman04@trojan.ae',
+      designation: 'Foreman',
+      computerNo: 'EMP-8852',
+      Language: 'Pashto + Urdu',
+      contractorName: 'TGC',
+      // phone: '+1 (555) 234-8852',
+      role: 'Foreman'
+    },
+    {
+      id: 'EMP-005',
+      firstName: 'Fazal',
+      surname: '',
+      name: 'Fazal ',
+      email: 'fazal@trojan.ae',
+      usernameAlias: 'foreman05@trojan.ae',
+      designation: 'Foreman',
+      computerNo: 'EMP-8853',
+      Language: 'Pashto + Urdu + Arabic W',
+      contractorName: 'TGC',
+      // phone: '+1 (555) 234-8853',
+      role: 'Foreman'
+    }
+
+ 
+];
+
 // REST API Routes
+app.get('/api/supervisors', (req, res) => {
+  res.json({ success: true, data: supervisorsData });
+});
+
+app.get('/api/supervisors/:idOrEmail', (req, res) => {
+  const target = req.params.idOrEmail.toLowerCase();
+  const found = supervisorsData.find(
+    s => s.id.toLowerCase() === target || s.email.toLowerCase() === target || (s.usernameAlias && s.usernameAlias.toLowerCase() === target)
+  );
+  if (found) {
+    return res.json({ success: true, data: found });
+  }
+  return res.status(404).json({ success: false, message: 'Supervisor not found' });
+});
+
 app.get('/api/projects', (req, res) => {
   res.json({ success: true, data: projectsData });
 });
@@ -269,9 +357,9 @@ app.post('/api/forms/send-email', (req, res) => {
   
   return res.json({
     success: true,
-    message: `Official PDF inspection report (${fileName}) for record #${auditId} has been attached and emailed to HSE Officer (${officerEmail || 'nimishanoush@gmail.com'}).`,
+    message: `Official PDF inspection report (${fileName}) for record #${auditId} has been attached and emailed to HSE Officer (${officerEmail || 'savad.salim@trojan.ae'}).`,
     deliveryDetails: {
-      to: officerEmail || 'nimishanoush@gmail.com',
+      to: officerEmail || 'savad.salim@trojan.ae',
       auditId,
       sentAt: new Date().toISOString(),
       subject: `[HSE AUDIT REPORT #${auditId} & PDF] ${siteName || 'Site Inspection'} - ${score || '100%'} Compliance - By ${supervisorName || 'Site Supervisor'}`,

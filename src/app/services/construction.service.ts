@@ -91,7 +91,7 @@ export class ConstructionService {
           timestamp: new Date().toISOString(),
           formTitle: 'Daily HSE Inspection',
           formCode: 'HSE-FRM-01',
-          projectName: payload.projectName || 'Apex Active Site',
+          Language: payload.Language || 'Apex Active Site',
           siteLocation: payload.siteLocation || 'Primary Zone',
           date: payload.date || new Date().toISOString().split('T')[0],
           supervisorName: payload.supervisorName || 'Site Supervisor',
@@ -119,7 +119,7 @@ export class ConstructionService {
       submissionId: submission.id,
       officerEmail: submission.hseOfficerEmail,
       supervisorName: submission.supervisorName,
-      siteName: submission.projectName,
+      siteName: submission.Language,
       score: submission.stats?.scorePercentage ? `${submission.stats.scorePercentage}%` : '100%',
       date: submission.date,
       pdfFilename: pdfMeta?.filename || `HSE_Inspection_Report_${(submission.date || '').replace(/-/g, '')}_${submission.computerNo || 'SUP'}.pdf`,
@@ -160,7 +160,7 @@ export class ConstructionService {
     const text = `*Daily HSE Inspection Form*
 📋 *Form:* ${submission.formTitle} (${submission.formCode})
 📅 *Date:* ${submission.date}
-🏗️ *Project Site:* ${submission.projectName} (${submission.siteLocation})
+🏗️ *Project Site:* ${submission.Language} (${submission.siteLocation})
 👷 *Supervisor:* ${submission.supervisorName} | ${submission.designation}
 💻 *Badge / Computer No:* ${submission.computerNo}
 🦺 *PPE Adherence:* ${submission.ppeAdherence}
@@ -170,7 +170,7 @@ export class ConstructionService {
 ✍️ *Signature Status:* Electronically Signed by Supervisor
 📎 *Attached PDF Document:* ${filename} (Saved to your device for immediate sharing)
 --------------------------------
-_Official audit submission generated via Apex HSE Supervisor Portal._`;
+_Official audit submission generated via Trojan HSE Employee Portal._`;
 
     return `https://wa.me/${rawNumber}?text=${encodeURIComponent(text)}`;
   }
@@ -178,7 +178,7 @@ _Official audit submission generated via Apex HSE Supervisor Portal._`;
   generateMailtoUrl(submission: HseInspectionSubmission, pdfFilename?: string): string {
     const email = submission.hseOfficerEmail || 'nimishanoush@gmail.com';
     const filename = pdfFilename || `HSE_Inspection_Report_${(submission.date || '').replace(/-/g, '')}_${submission.computerNo || 'SUP'}.pdf`;
-    const subject = encodeURIComponent(`[Daily HSE INSPECTION Form & PDF ATTACHMENT] ${submission.projectName} - ${submission.date} - ${submission.supervisorName}`);
+    const subject = encodeURIComponent(`[Daily HSE INSPECTION Form & PDF ATTACHMENT] ${submission.Language} - ${submission.date} - ${submission.supervisorName}`);
     const body = encodeURIComponent(`Dear HSE Officer (${submission.hseOfficerName}),
 
 Please find the submitted Daily Site HSE Inspection Form with attached certified PDF:
@@ -186,7 +186,7 @@ Please find the submitted Daily Site HSE Inspection Form with attached certified
 - Attached PDF File: ${filename}
 - Form: ${submission.formTitle} (${submission.formCode})
 - Audit Date: ${submission.date}
-- Project: ${submission.projectName}
+- Project: ${submission.Language}
 - Location: ${submission.siteLocation}
 - Supervisor: ${submission.supervisorName} (${submission.designation})
 - Computer/Badge No: ${submission.computerNo}
@@ -288,7 +288,7 @@ Trojan Construction HSE Portal`);
         bio: 'Chartered Civil & Structural Engineer overseeing apex engineering governance, major infrastructure bids, and corporate zero-harm policies across all construction sites.',
         photo: '',
         certifications: ['PE Civil / Structural', 'Fellow ICE', 'MBA Project Management'],
-        contact: 'xxxxxxxx@trojan.com'
+        contact: 'xxxxxxxx@trojan.ae'
       },
       {
         id: 'team-02',
@@ -298,7 +298,7 @@ Trojan Construction HSE Portal`);
         bio: 'Specialist in modern steel-concrete composites, BIM level 3 modeling, and high-rise structural optimization with an emphasis on ergonomic and safe site ergonomics.',
         photo: '',
         certifications: ['AIA Registered', 'LEED AP BD+C', 'BIM Coordinator Cert'],
-        contact: 'xxxxxxxx@trojan.com'
+        contact: 'xxxxxxxx@trojan.ae'
       },
       {
         id: 'team-03',
@@ -308,7 +308,7 @@ Trojan Construction HSE Portal`);
         bio: 'Directs on-site plant operations, tower crane logistics, ground engineering, and rigorous daily mechanical lifting inspections across active work fronts.',
         photo: '',
         certifications: ['CPCS Appointed Person', 'GoK Plant Inspector', 'IOSH Managing Safely'],
-        contact: 'xxxxxxxx@trojan.com'
+        contact: 'xxxxxxxx@trojan.ae'
       },
       {
         id: 'team-04',
@@ -318,8 +318,8 @@ Trojan Construction HSE Portal`);
         bio: 'Leads company-wide health, safety, and environmental auditing. Oversees daily site inspections, supervisor compliance workflows, and ISO 45001 safety governance.',
         photo: '',
         certifications: ['NEBOSH Diploma', 'CMIOSH Chartered', 'ISO 45001 / 14001 Lead Auditor'],
-        contact: 'xxxxxxxx@trojan.com',
-        whatsapp: '+18005550199'
+        contact: 'xxxxxxxx@trojan.ae',
+        whatsapp: '+0000000000'
       }
     ];
   }

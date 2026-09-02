@@ -45,7 +45,7 @@ import { MatIconModule } from '@angular/material/icon';
               <li>
                 <a routerLink="/supervisor-portal" class="hover:text-orange-400 transition-colors flex items-center gap-1.5 font-semibold text-orange-400">
                   <mat-icon class="!text-orange-400 !text-xs !w-3.5 !h-3.5">lock</mat-icon>
-                  Supervisor HSE Inspection Portal
+                  Employee HSE Inspection Portal
                 </a>
               </li>
               <li>
@@ -67,15 +67,15 @@ import { MatIconModule } from '@angular/material/icon';
                 <mat-icon class="!text-orange-400 !text-lg !w-5 !h-5 shrink-0 mt-0.5">verified_user</mat-icon>
                 <div>
                   <div class="text-white font-semibold">Savad Mohamed Salim (HSE Officer)</div>
-                  <div class="text-xs text-stone-400">Chief HSE Compliance Officer</div>
+                  <div class="text-xs text-stone-400">HSE Officer</div>
                 </div>
               </div>
               <div class="flex items-start gap-2.5">
                 <mat-icon class="!text-orange-400 !text-lg !w-5 !h-5 shrink-0 mt-0.5">email</mat-icon>
                 <div>
                   <div class="text-xs text-stone-400">Direct Audit Email:</div>
-                  <a href="mailto:hse-officer@trojan.com" class="text-white hover:text-orange-400 transition-colors text-xs font-mono">
-                    hse-officer@trojan.com
+                  <a href="mailto:savad.salim@trojan.ae" class="text-white hover:text-orange-400 transition-colors text-xs font-mono">
+                    savad.salim@trojan.ae
                   </a>
                 </div>
               </div>
@@ -83,8 +83,8 @@ import { MatIconModule } from '@angular/material/icon';
                 <mat-icon class="!text-emerald-400 !text-lg !w-5 !h-5 shrink-0 mt-0.5">chat</mat-icon>
                 <div>
                   <div class="text-xs text-stone-400">WhatsApp Safety Dispatch:</div>
-                  <a href="https://wa.me/18005550199" target="_blank" class="text-emerald-400 hover:underline text-xs font-mono">
-                    +1 (800) 555-0199
+                  <a href="https://wa.me/000000" target="_blank" class="text-emerald-400 hover:underline text-xs font-mono">
+                    000000000
                   </a>
                 </div>
               </div>
@@ -121,7 +121,7 @@ import { MatIconModule } from '@angular/material/icon';
           <div class="flex items-center gap-6">
             <span class="text-stone-400">Zero-Harm Workplace Policy</span>
             <span class="text-stone-400">ISO 45001 Certified Operations</span>
-            <a routerLink="/supervisor-portal" class="text-orange-400 hover:underline">Supervisor Portal</a>
+            <a routerLink="/supervisor-portal" class="text-orange-400 hover:underline">Employee Portal</a>
           </div>
         </div>
       </div>

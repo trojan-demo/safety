@@ -163,7 +163,7 @@ export class PdfExportService {
           { content: `Signature: ${submission.supervisorSignature ? '[Electronically Signed]' : '_______________'}`, colSpan: 2, styles: { fontStyle: 'bold' } }
         ],
         [
-          { content: `HSE Officer: ${submission.hseOfficerName || 'Elena Vance (CMIOSH)'}`, styles: { cellWidth: 50 } },
+          { content: `HSE Officer: ${submission.hseOfficerName || 'Savad Mohamed Salim'}`, styles: { cellWidth: 50 } },
           { content: `Signature: __________________________`, colSpan: 2 }
         ],
         [
@@ -238,7 +238,7 @@ export class PdfExportService {
       if (navigator.canShare && navigator.canShare({ files: [file] })) {
         await navigator.share({
           title,
-          text: `Official HSE Site Inspection Report (${submission.projectName || 'Site'}) - ${filename}`,
+          text: `Official HSE Site Inspection Report (${submission.Language || 'Site'}) - ${filename}`,
           files: [file]
         });
         return true;

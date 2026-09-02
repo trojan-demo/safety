@@ -50,14 +50,33 @@ export interface FormTemplate {
   badge: string;
 }
 
+export interface SupervisorUser {
+  id: string;
+  firstName: string;
+  surname: string;
+  name: string;
+  email: string;
+  usernameAlias?: string;
+  designation: string;
+  computerNo: string;
+  Language: string;
+  contractorName: string;
+  phone?: string;
+  role: string;
+}
+
 export interface SupervisorSession {
   id: string;
+  firstName: string;
+  surname: string;
   name: string;
   email: string;
   designation: string;
   computerNo: string;
-  assignedSite: string;
-  role: 'Site Supervisor' | 'Senior HSE Lead';
+  Language: string;
+  contractorName?: string;
+  phone?: string;
+  role: string;
 }
 
 export interface HseInspectionSubmission {
@@ -65,7 +84,7 @@ export interface HseInspectionSubmission {
   timestamp: string;
   formTitle: string;
   formCode: string;
-  projectName: string;
+  Language: string;
   siteLocation: string;
   date: string;
   supervisorName: string;

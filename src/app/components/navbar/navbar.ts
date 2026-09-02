@@ -110,7 +110,7 @@ import { AuthService } from '../../services/auth.service';
                 assignment_turned_in
               </mat-icon>
 
-              Supervisor Portal
+              Employee Portal
 
               @if (authService.isAuthenticated()) {
                 <span
@@ -209,7 +209,7 @@ import { AuthService } from '../../services/auth.service';
                   lock
                 </mat-icon>
 
-                Supervisor Login
+                Employee Login
 
               </a>
 
@@ -287,7 +287,7 @@ import { AuthService } from '../../services/auth.service';
                   assignment_turned_in
                 </mat-icon>
 
-                Supervisor Portal
+                Employee Portal
 
               </a>
 
@@ -362,7 +362,7 @@ import { AuthService } from '../../services/auth.service';
 
                   </mat-icon>
 
-                  Supervisor Login
+                  Employee Login
 
                 </a>
 

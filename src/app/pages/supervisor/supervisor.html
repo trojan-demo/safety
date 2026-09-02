@@ -3,81 +3,86 @@
 
     <!-- Case 1: NOT Authenticated (Supervisor Login Guard) -->
     @if (!authService.isAuthenticated()) {
-      <div class="max-w-md mx-auto my-12 bg-stone-900 border border-stone-800 rounded-3xl p-8 shadow-2xl">
-        <div class="text-center space-y-3 mb-8">
-          <div class="w-16 h-16 rounded-2xl bg-orange-600/10 border border-orange-500/30 text-orange-400 mx-auto flex items-center justify-center">
-            <mat-icon class="!text-3xl !w-8 !h-8">lock</mat-icon>
-          </div>
-          <h1 class="text-2xl font-black text-white font-display">Supervisor Access Portal</h1>
-        </div>
-
-        <!-- Fixed Credentials Notice Box -->
-        <div class="mb-6 p-4 rounded-xl bg-stone-950 border border-orange-500/30 text-xs space-y-2">
-          <div class="flex items-center gap-1.5 text-orange-400 font-bold">
-            <mat-icon class="!text-orange-400 !text-sm !w-4 !h-4">key</mat-icon>
-            Fixed Supervisor Login Credentials
-          </div>
-          <div class="font-mono text-stone-300 space-y-1 bg-stone-900 p-2.5 rounded border border-stone-800">
-            <div><span class="text-stone-500">Username:</span> <span class="text-orange-300 font-bold">supervisor&#64;trojan.com</span></div>
-            <div><span class="text-stone-500">Password:</span> <span class="text-orange-300 font-bold">TrojanSafety#2026</span></div>
-          </div>
-          <button
-            type="button"
-            (click)="handleDemoLogin()"
-            class="w-full py-2 px-3 rounded-lg bg-orange-600/20 hover:bg-orange-600/30 text-orange-300 font-bold text-xs border border-orange-500/40 transition-colors flex items-center justify-center gap-1.5 mt-2 cursor-pointer"
-          >
-            <mat-icon class="!text-orange-400 !text-sm !w-4 !h-4">bolt</mat-icon>
-            1-Click Auto-Fill & Login (Demo)
-          </button>
-        </div>
-
-        <!-- Login Form -->
-        <form [formGroup]="loginForm" (ngSubmit)="handleLogin()" class="space-y-4">
-          @if (loginErrorMessage()) {
-            <div class="p-3 rounded-xl bg-red-950/80 border border-red-500/40 text-red-300 text-xs flex items-center gap-2">
-              <mat-icon class="!text-red-400 !text-base !w-4 !h-4 shrink-0">error</mat-icon>
-              <span>{{ loginErrorMessage() }}</span>
+      <div class="max-w-4xl mx-auto my-8 space-y-8 animate-fade-in">
+        <!-- Main Login Box -->
+        <div class="max-w-md mx-auto bg-stone-900 border border-stone-800 rounded-3xl p-8 shadow-2xl">
+          <div class="text-center space-y-3 mb-6">
+            <div class="w-16 h-16 rounded-2xl bg-orange-600/10 border border-orange-500/30 text-orange-400 mx-auto flex items-center justify-center">
+              <mat-icon class="!text-3xl !w-8 !h-8">badge</mat-icon>
             </div>
-          }
+            <h1 class="text-2xl font-black text-white font-display">Employee Access Portal</h1>
+          </div>
 
-          <div class="space-y-1">
-            <label for="login-username" class="block text-xs font-semibold uppercase tracking-wider text-stone-300">
-              Supervisor Identifier / Email
-            </label>
-            <div class="relative">
+          <!-- Credentials & Shared Password Info -->
+          <!-- <div class="mb-6 p-4 rounded-2xl bg-stone-950 border border-orange-500/30 text-xs space-y-2.5"> -->
+            <!-- <div class="flex items-center justify-between">
+              <div class="flex items-center gap-1.5 text-orange-400 font-bold">
+                <mat-icon class="!text-orange-400 !text-sm !w-4 !h-4">vpn_key</mat-icon>
+                <span>10 Authorized Accounts</span>
+              </div>
+              <span class="px-2 py-0.5 rounded text-[10px] font-bold bg-orange-600/20 text-orange-300 border border-orange-500/30">
+                Shared Password
+              </span>
+            </div> -->
+            
+          
+
+            <!-- <button
+              type="button"
+              (click)="handleDemoLogin()"
+              class="w-full py-2 px-3 rounded-xl bg-orange-600/20 hover:bg-orange-600/30 text-orange-300 font-bold text-xs border border-orange-500/40 transition-colors flex items-center justify-center gap-1.5 cursor-pointer"
+            >
+              <mat-icon class="!text-orange-400 !text-sm !w-4 !h-4">bolt</mat-icon>
+              1-Click Auto-Fill & Sign In
+            </button> -->
+          <!-- </div> -->
+
+          <!-- Login Form -->
+          <form [formGroup]="loginForm" (ngSubmit)="handleLogin()" class="space-y-4">
+            @if (loginErrorMessage()) {
+              <div class="p-3 rounded-xl bg-red-950/80 border border-red-500/40 text-red-300 text-xs flex items-center gap-2">
+                <mat-icon class="!text-red-400 !text-base !w-4 !h-4 shrink-0">error</mat-icon>
+                <span>{{ loginErrorMessage() }}</span>
+              </div>
+            }
+
+            <div class="space-y-1">
+              <label for="login-username" class="block text-xs font-semibold uppercase tracking-wider text-stone-300">
+                Employee Email / Identifier
+              </label>
               <input
                 id="login-username"
                 type="text"
                 formControlName="username"
-                placeholder="supervisor@apexbuild.com"
+                
                 class="w-full bg-stone-950 border border-stone-700 rounded-xl px-4 py-3 text-sm text-white placeholder-stone-500 focus:outline-none focus:border-orange-500 transition-colors"
               />
             </div>
-          </div>
 
-          <div class="space-y-1">
-            <label for="login-password" class="block text-xs font-semibold uppercase tracking-wider text-stone-300">
-              Security Password
-            </label>
-            <div class="relative">
+            <div class="space-y-1">
+              <label for="login-password" class="block text-xs font-semibold uppercase tracking-wider text-stone-300">
+                Security Password
+              </label>
               <input
                 id="login-password"
                 type="password"
                 formControlName="password"
-                placeholder="••••••••••••"
+                placeholder="TrojanSafety#2026"
                 class="w-full bg-stone-950 border border-stone-700 rounded-xl px-4 py-3 text-sm text-white placeholder-stone-500 focus:outline-none focus:border-orange-500 transition-colors"
               />
             </div>
-          </div>
 
-          <button
-            type="submit"
-            class="w-full py-3.5 rounded-xl bg-orange-600 hover:bg-orange-500 text-white font-bold text-sm transition-all shadow-lg shadow-orange-600/20 flex items-center justify-center gap-2 mt-2 cursor-pointer"
-          >
-            <mat-icon class="!text-white">login</mat-icon>
-            Sign In to Supervisor Portal
-          </button>
-        </form>
+            <button
+              type="submit"
+              class="w-full py-3.5 rounded-xl bg-orange-600 hover:bg-orange-500 text-white font-bold text-sm transition-all shadow-lg shadow-orange-600/20 flex items-center justify-center gap-2 mt-2 cursor-pointer"
+            >
+              <mat-icon class="!text-white">login</mat-icon>
+              Sign In to Employee Portal
+            </button>
+          </form>
+        </div>
+
+      
       </div>
     }
 
@@ -85,6 +90,51 @@
     @if (authService.isAuthenticated()) {
       <!-- Supervisor Profile Header -->
       <div class="bg-stone-900 border border-stone-800 rounded-3xl p-6 mb-8 shadow-xl">
+        <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-6">
+          <div class="flex items-start sm:items-center gap-4">
+            <div class="w-14 h-14 rounded-2xl bg-orange-600 text-white flex items-center justify-center font-black text-2xl shadow-lg shrink-0">
+              <mat-icon class="!text-white !text-3xl !w-8 !h-8">badge</mat-icon>
+            </div>
+            <div>
+              <div class="flex flex-wrap items-center gap-2">
+                <h1 class="text-xl sm:text-2xl font-bold font-display text-white">
+                  {{ authService.currentSupervisor()?.firstName }} <span class="text-orange-400">{{ authService.currentSupervisor()?.surname }}</span>
+                </h1>
+                <span class="px-2.5 py-0.5 rounded-full bg-emerald-500/20 text-emerald-400 text-xs font-bold border border-emerald-500/30 flex items-center gap-1">
+                  <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+                  Verified Supervisor
+                </span>
+                <span class="px-2.5 py-0.5 rounded-full bg-stone-800 text-stone-300 text-xs font-mono">
+                  {{ authService.currentSupervisor()?.id }}
+                </span>
+              </div>
+              <p class="text-xs text-stone-400 mt-1.5 flex flex-wrap items-center gap-x-3 gap-y-1">
+                <span><strong class="text-stone-300">Designation:</strong> {{ authService.currentSupervisor()?.designation }}</span>
+                <span>•</span>
+                <span><strong class="text-stone-300">Surname:</strong> {{ authService.currentSupervisor()?.surname }}</span>
+                <span>•</span>
+                <span><strong class="text-stone-300">Badge/Computer No:</strong> <code class="text-orange-400 font-bold">{{ authService.currentSupervisor()?.computerNo }}</code></span>
+                <span>•</span>
+                <span><strong class="text-stone-300">Language:</strong> {{ authService.currentSupervisor()?.Language }}</span>
+                <span>•</span>
+                <span><strong class="text-stone-300">Contractor Name:</strong> {{ authService.currentSupervisor()?.contractorName }}</span>
+              </p>
+            </div>
+          </div>
+
+          <!-- Actions -->
+          <div class="flex flex-wrap items-center gap-3">
+            <button
+              type="button"
+              (click)="authService.logout()"
+              class="px-4 py-2 rounded-xl bg-stone-800 hover:bg-red-950/60 text-stone-300 hover:text-red-400 text-xs font-semibold border border-stone-700 transition-colors flex items-center gap-1.5 cursor-pointer"
+            >
+              <mat-icon class="!text-sm !w-4 !h-4">logout</mat-icon>
+              Sign Out ({{ authService.currentSupervisor()?.surname }})
+            </button>
+          </div>
+        </div>
+
         <!-- Navigation Tabs -->
         <div class="flex flex-wrap gap-2 mt-6 pt-6 border-t border-stone-800">
           <button
@@ -94,7 +144,7 @@
             class="px-4 py-2.5 rounded-xl text-xs sm:text-sm transition-all flex items-center gap-2 cursor-pointer"
           >
             <mat-icon class="!text-base !w-4 !h-4">assignment_turned_in</mat-icon>
-            DAILY INSPECTION HSE-FRM-01
+            Daily HSE Inspection FRM (01) (Active)
           </button>
 
           <button
@@ -126,7 +176,11 @@
           <div class="bg-stone-900 border border-stone-800 rounded-3xl p-6 lg:p-8 space-y-6 shadow-xl">
             <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-stone-800 pb-6">
               <div>
-                <span class="text-xs font-bold uppercase tracking-widest text-orange-400">DAILY INSPECTION HSE-FRM-01</span>
+                <span class="text-xs font-bold uppercase tracking-widest text-orange-400">Daily Inspection HSE-FRM-01</span>
+                <h2 class="text-2xl sm:text-3xl font-extrabold text-white font-display mt-1">
+                  Daily HSE Inspection
+                </h2>
+               
               </div>
 
               <!-- Score & Quick Toggles -->
@@ -171,7 +225,7 @@
                 <label for="inspect-project" class="font-bold text-stone-300 uppercase tracking-wider">Project / Site Name</label>
                 <select
                   id="inspect-project"
-                  formControlName="projectName"
+                  formControlName="Language"
                   class="w-full bg-stone-950 border border-stone-700 rounded-xl px-3 py-2.5 text-white font-medium focus:outline-none focus:border-orange-500"
                 >
                   @for (p of constructionService.projects(); track p.id) {
@@ -288,15 +342,15 @@
           <div class="bg-stone-900 border border-stone-800 rounded-3xl p-6 lg:p-8 space-y-6 shadow-xl" [formGroup]="inspectionForm">
             <h3 class="font-display text-lg font-bold text-white border-b border-stone-800 pb-3 flex items-center gap-2">
               <mat-icon class="!text-orange-400">draw</mat-icon>
-              Supervisor Sign-Off & Verification
+              Employee Sign-Off & Verification
             </h3>
 
             <div class="grid grid-cols-1 md:grid-cols-3 gap-6 text-xs">
               <!-- Supervisor Info -->
               <div class="space-y-3 bg-stone-950 p-4 rounded-2xl border border-stone-800">
-                <div class="text-orange-400 font-bold uppercase tracking-wider">Supervisor Details</div>
+                <div class="text-orange-400 font-bold uppercase tracking-wider">Employee Details</div>
                 <div>
-                  <span class="text-stone-500 block">Supervisor Name:</span>
+                  <span class="text-stone-500 block">Employee Name:</span>
                   <input
                     type="text"
                     formControlName="supervisorName"
@@ -323,7 +377,7 @@
 
               <!-- HSE Officer Contact & Notification Config -->
               <div class="space-y-3 bg-stone-950 p-4 rounded-2xl border border-stone-800">
-                <div class="text-orange-400 font-bold uppercase tracking-wider">HSE Officer Dispatch Target</div>
+                <div class="text-orange-400 font-bold uppercase tracking-wider">HSE Officer</div>
                 <div>
                   <span class="text-stone-500 block">HSE Officer Name:</span>
                   <input
@@ -383,6 +437,7 @@
                     formControlName="signatureText"
                     class="w-full bg-stone-900 border border-stone-700 rounded-lg px-3 py-2 text-white font-serif italic"
                   />
+                  <span class="text-[10px] text-stone-500 mt-1 block">Digital signature timestamped upon dispatch</span>
                 </div>
               </div>
             </div>
@@ -402,12 +457,12 @@
             </div> -->
 
             <!-- PRIMARY SUBMISSION AND PDF DOWNLOAD BUTTONS -->
-            <div class="flex flex-col sm:flex-row items-center justify-end gap-4 pt-4 border-t border-stone-800  text-right">
-              <!-- <div class="text-xs text-stone-400">
-                Audit is archived locally in Node.js server. No MongoDB required.
-              </div> -->
+            <div class="flex flex-col sm:flex-row items-center justify-between gap-4 pt-4 border-t border-stone-800">
+              <div class="text-xs text-stone-400">
+                <!-- Audit is archived locally in Node.js server. No MongoDB required. -->
+              </div>
 
-              <div class="flex flex-wrap gap-3 w-full sm:w-auto">
+              <div class="flex flex-wrap items-center gap-3 w-full sm:w-auto">
                 <!-- PDF Download Button -->
                 <button
                   type="button"
@@ -478,7 +533,7 @@
                         {{ sub.stats?.scorePercentage ?? 100 }}% Score
                       </span>
                     </div>
-                    <h4 class="text-sm font-bold text-white">{{ sub.projectName }}</h4>
+                    <h4 class="text-sm font-bold text-white">{{ sub.Language }}</h4>
                     <p class="text-xs text-stone-400">
                       Audit Date: <strong class="text-stone-200">{{ sub.date }}</strong> • Supervisor: <strong class="text-stone-200">{{ sub.supervisorName }}</strong> ({{ sub.computerNo }}) • HSE Officer: {{ sub.hseOfficerName }}
                     </p>
@@ -604,9 +659,9 @@
           <mat-icon class="!text-3xl !w-8 !h-8">verified</mat-icon>
         </div>
         <h3 class="text-2xl font-bold font-display text-white">Inspection Submitted & PDF Saved!</h3>
-        <!-- <p class="text-xs text-stone-400 leading-relaxed">
+        <p class="text-xs text-stone-400 leading-relaxed">
           Audit report <strong class="text-white">#{{ submittedRecord()?.id }}</strong> has been officially archived. The certified PDF has been generated and saved for dispatch to HSE Officer Elena Vance.
-        </p> -->
+        </p>
       </div>
 
       <!-- Saved PDF Document Badge -->
@@ -641,11 +696,11 @@
         <div class="bg-stone-950 p-4 rounded-xl border border-stone-800 text-xs space-y-2">
           <div class="flex justify-between">
             <span class="text-stone-500">Project Site:</span>
-            <span class="font-bold text-stone-200 truncate ml-2 text-right">Maysan Development Phase I</span>
+            <span class="font-bold text-stone-200 truncate ml-2 text-right">{{ rec.Language }}</span>
           </div>
           <div class="flex justify-between">
-            <span class="text-stone-500">Supervisor:</span>
-            <span class="font-medium text-stone-200">{{ rec.supervisorName }}</span>
+            <span class="text-stone-500">Supervisor / Badge:</span>
+            <span class="font-medium text-stone-200">{{ rec.supervisorName }} ({{ rec.computerNo }})</span>
           </div>
           <div class="flex justify-between">
             <span class="text-stone-500">HSE Officer:</span>
@@ -659,6 +714,13 @@
       }
 
       <!-- Status Alerts -->
+      @if (pdfShareStatus()) {
+        <div class="p-2.5 rounded-xl bg-stone-950 border border-emerald-500/40 text-emerald-300 text-xs flex items-center gap-2">
+          <mat-icon class="!text-sm !w-4 !h-4 text-emerald-400 shrink-0">info</mat-icon>
+          <span>{{ pdfShareStatus() }}</span>
+        </div>
+      }
+
       @if (emailSentStatus()) {
         <div class="p-2.5 rounded-xl bg-stone-950 border border-blue-500/40 text-blue-300 text-xs flex items-center gap-2">
           <mat-icon class="!text-sm !w-4 !h-4 text-blue-400 shrink-0">mark_email_read</mat-icon>
@@ -681,14 +743,14 @@
         }
 
         <!-- WhatsApp Dispatch -->
-        <!-- <button
+        <button
           type="button"
           (click)="openWhatsApp()"
           class="w-full py-3 px-4 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs transition-all flex items-center justify-center gap-2 shadow-lg shadow-emerald-600/20 cursor-pointer"
         >
           <mat-icon class="!text-base !w-4 !h-4">chat</mat-icon>
           Send PDF & Audit Summary via WhatsApp
-        </button> -->
+        </button>
 
         <!-- Email Dispatch via API (With PDF Attachment) -->
         <button
