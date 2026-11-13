@@ -92,6 +92,7 @@ export class ConstructionService {
           formTitle: 'Daily Site HSE Inspection / Performance Evaluation',
           formCode: 'HSE-FRM-01',
           Language: payload.Language ||'Apex  Active Site',
+          Prjname:' Maysan Development Phase I TG2164',
           siteLocation: payload.siteLocation || 'Primary Zone',
           levelZone: payload.levelZone || 'All Levels',
           date: payload.date || new Date().toISOString().split('T')[0],
@@ -121,7 +122,7 @@ export class ConstructionService {
       submissionId: submission.id,
       officerEmail: submission.hseOfficerEmail,
       supervisorName: submission.supervisorName,
-      siteName: submission.Language,
+      siteName: submission.Prjname,
       score: submission.stats?.scorePercentage ? `${submission.stats.scorePercentage}%` : '100%',
       date: submission.date,
       pdfFilename: pdfMeta?.filename || `HSE_Inspection_Report_${(submission.date || '').replace(/-/g, '')}_${submission.computerNo || 'SUP'}.pdf`,
@@ -190,6 +191,7 @@ Please find the submitted Daily Site HSE Inspection Form with attached certified
 - Audit Date: ${submission.date}
 - Project: ${submission.Language}
 - Location: ${submission.siteLocation}
+
 - Level/Zone: ${submission.levelZone || 'General Site'}
 - Task Supervisor: ${submission.supervisorName} - Computer/Badge No: ${submission.computerNo}
 - PPE Adherence: ${submission.ppeAdherence}
@@ -284,7 +286,7 @@ Trojan Construction HSE Portal`);
     return [
       {
         id: 'team-01',
-        name: 'Aswin Kumar Panigrahi',
+        name: 'Awais Asghar',
         role: 'HSE Manager',
         experience: '26 Years Experience',
         bio: 'Chartered Civil & Structural Engineer overseeing apex engineering governance, major infrastructure bids, and corporate zero-harm policies across all construction sites.',
@@ -314,7 +316,7 @@ Trojan Construction HSE Portal`);
       },
       {
         id: 'team-04',
-        name: 'Elena Vance, CMIOSH',
+        name: 'trojan safety',
         role: 'Chief HSE & Compliance Officer',
         experience: '15 Years Experience',
         bio: 'Leads company-wide health, safety, and environmental auditing. Oversees daily site inspections, supervisor compliance workflows, and ISO 45001 safety governance.',

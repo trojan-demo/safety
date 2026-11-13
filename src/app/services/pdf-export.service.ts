@@ -288,7 +288,7 @@ export class PdfExportService {
       if (navigator.canShare && navigator.canShare({ files: [file] })) {
         await navigator.share({
           title,
-          text: `Official HSE Site Inspection Report (${submission.Language || 'Site'}) - ${filename}`,
+          text: `Official HSE Site Inspection Report - ${filename}`,
           files: [file]
         });
         return true;

@@ -22,7 +22,8 @@ export class AuthService {
       Language: 'Arabic,English,Hindi',
       contractorName: 'TGC',
       // phone: '+1 (555) 234-8849',
-      role: 'Foreman'
+      role: 'Foreman',
+      Prjname: ''
     },
     {
       id: 'EMP-002',
@@ -36,7 +37,8 @@ export class AuthService {
       Language: 'Bhojpuri + Hindi + English ',
       contractorName: 'TGC',
       // phone: '+1 (555) 234-8850',
-      role: 'Foreman'
+      role: 'Foreman',
+      Prjname: ''
     },
     {
       id: 'EMP-003',
@@ -48,9 +50,10 @@ export class AuthService {
       designation: 'Foreman',
       computerNo: 'EMP-8851',
       Language: 'Pashto + Urdu',
-      contractorName:  'TGC',
+      contractorName: 'TGC',
       // phone: '+1 (555) 234-8851',
-      role:'Foreman'
+      role: 'Foreman',
+      Prjname: ''
     },
     {
       id: 'EMP-004',
@@ -64,7 +67,8 @@ export class AuthService {
       Language: 'Pashto + Urdu',
       contractorName: 'TGC',
       // phone: '+1 (555) 234-8852',
-      role: 'Foreman'
+      role: 'Foreman',
+      Prjname: ''
     },
     {
       id: 'EMP-005',
@@ -78,22 +82,24 @@ export class AuthService {
       Language: 'Pashto + Urdu + Arabic W',
       contractorName: 'TGC',
       // phone: '+1 (555) 234-8853',
-      role: 'Foreman'
+      role: 'Foreman',
+      Prjname: ''
     },
      {
-      id: 'EMP-006',
-      firstName: 'Savad',
-      surname: 'Mohamed Salim',
-      name: 'Savad Mohamed Salim ',
-      email: 'savad.salim@trojan.ae',
-      usernameAlias: 'hse06@trojan.ae',
-      designation: 'HSE Officer',
-      computerNo: 'EMP-8854',
-      Language: 'English + Malayalam +Hindi',
-      contractorName: 'TGC',
-      // phone: '+1 (555) 234-8853',
-      role: 'HSE Officer'
-    }
+       id: 'EMP-006',
+       firstName: 'Savad',
+       surname: 'Mohamed Salim',
+       name: 'Savad Mohamed Salim ',
+       email: 'savad.salim@trojan.ae',
+       usernameAlias: 'hse06@trojan.ae',
+       designation: 'HSE Officer',
+       computerNo: 'EMP-8854',
+       Language: 'English + Malayalam +Hindi',
+       contractorName: 'TGC',
+       // phone: '+1 (555) 234-8853',
+       role: 'HSE Officer',
+       Prjname: ''
+     }
   ];
 
   // Default credentials legacy fallback
@@ -204,6 +210,7 @@ export class AuthService {
         email: matchedUser.email,
         designation: matchedUser.designation,
         computerNo: matchedUser.computerNo,
+        Prjname:' Maysan Development Phase I TG2164',
         Language: matchedUser.Language,
         contractorName: matchedUser.contractorName,
         phone: matchedUser.phone,

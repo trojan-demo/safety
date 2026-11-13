@@ -63,6 +63,7 @@ export interface SupervisorUser {
   designation: string;
   computerNo: string;
   Language: string;
+  Prjname:string;
   contractorName: string;
   phone?: string;
   role: string;
@@ -77,6 +78,7 @@ export interface SupervisorSession {
   designation: string;
   computerNo: string;
   Language: string;
+  Prjname:string;
   contractorName?: string;
   phone?: string;
   role: string;
@@ -88,6 +90,7 @@ export interface HseInspectionSubmission {
   formTitle: string;
   formCode: string;
   Language: string;
+  Prjname:string;
   siteLocation: string;
   date: string;
   supervisorName: string;

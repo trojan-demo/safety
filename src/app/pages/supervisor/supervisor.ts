@@ -256,6 +256,7 @@ export class SupervisorComponent {
       formTitle: 'Supervisor Site HSE Inspection',
       formCode: 'HSE-FRM-01',
       Language: formVals.Language,
+      Prjname: 'Maysan Development Phase I TG2164',
       siteLocation: formVals.siteLocation,
       levelZone: formVals.levelZone,
       date: formVals.date,
