@@ -89,10 +89,11 @@ export class ConstructionService {
         const fallbackRecord: HseInspectionSubmission = {
           id: `HSE-LOC-${Date.now()}`,
           timestamp: new Date().toISOString(),
-          formTitle: 'Daily HSE Inspection',
+          formTitle: 'Daily Site HSE Inspection / Performance Evaluation',
           formCode: 'HSE-FRM-01',
-          Language: payload.Language || 'Apex Active Site',
+          Language: payload.Language ||'Apex  Active Site',
           siteLocation: payload.siteLocation || 'Primary Zone',
+          levelZone: payload.levelZone || 'All Levels',
           date: payload.date || new Date().toISOString().split('T')[0],
           supervisorName: payload.supervisorName || 'Site Supervisor',
           designation: payload.designation || 'Supervisor',
@@ -103,8 +104,9 @@ export class ConstructionService {
           hseOfficerWhatsapp: payload.hseOfficerWhatsapp || '+971568056045',
           ppeAdherence: payload.ppeAdherence || 'Yes',
           checklist: payload.checklist || {},
-          correctiveActions: payload.correctiveActions || ''
-        };
+          remarks: payload.remarks || {},
+          correctiveActions: payload.correctiveActions || '',
+          stats: payload.stats        };
         this.recentSubmissions.update((list) => [fallbackRecord, ...list]);
         return of({ success: true, message: 'Inspection saved locally.', data: fallbackRecord });
       })
@@ -157,15 +159,15 @@ export class ConstructionService {
       flaggedSummary = flaggedKeys.join(', ');
     }
 
-    const text = `*Daily HSE Inspection Form*
+    const text = `*Daily HSE Inspection Report*
 📋 *Form:* ${submission.formTitle} (${submission.formCode})
 📅 *Date:* ${submission.date}
-🏗️ *Project Site:* ${submission.Language} (${submission.siteLocation})
-👷 *Supervisor:* ${submission.supervisorName} | ${submission.designation}
+🏗️ *Project Site:* ${submission.Language} (${submission.siteLocation}${submission.levelZone ? ' | ' + submission.levelZone : ''})
+👷 *Task Supervisor:* ${submission.supervisorName} | ${submission.designation}
 💻 *Badge / Computer No:* ${submission.computerNo}
 🦺 *PPE Adherence:* ${submission.ppeAdherence}
-📊 *Compliance Score:* ${submission.stats?.scorePercentage ?? 100}% (${submission.stats?.yesCount ?? 42} Yes / ${submission.stats?.noCount ?? 0} Flagged)
-⚠️ *Action Items Flagged:* ${flaggedSummary}
+📊 *Total Marks:* ${submission.stats?.totalMarks ?? 260} / ${submission.stats?.maxMarks ?? 260} (${submission.stats?.scorePercentage ?? 100}% | ${submission.stats?.naCount ?? 0} NA)
+⚠️ *Low-Rated Items (1-2):* ${flaggedSummary}
 📝 *Remarks:* ${submission.correctiveActions || 'All site safety standards verified.'}
 ✍️ *Signature Status:* Electronically Signed by Supervisor
 📎 *Attached PDF Document:* ${filename} (Saved to your device for immediate sharing)
@@ -179,7 +181,7 @@ _Official audit submission generated via Trojan HSE Employee Portal._`;
     const email = submission.hseOfficerEmail || 'nimishanoush@gmail.com';
     const filename = pdfFilename || `HSE_Inspection_Report_${(submission.date || '').replace(/-/g, '')}_${submission.computerNo || 'SUP'}.pdf`;
     const subject = encodeURIComponent(`[Daily HSE INSPECTION Form & PDF ATTACHMENT] ${submission.Language} - ${submission.date} - ${submission.supervisorName}`);
-    const body = encodeURIComponent(`Dear HSE Officer (${submission.hseOfficerName}),
+    const body = encodeURIComponent(`Dear HSO/I (${submission.hseOfficerName}),
 
 Please find the submitted Daily Site HSE Inspection Form with attached certified PDF:
 
@@ -188,11 +190,11 @@ Please find the submitted Daily Site HSE Inspection Form with attached certified
 - Audit Date: ${submission.date}
 - Project: ${submission.Language}
 - Location: ${submission.siteLocation}
-- Supervisor: ${submission.supervisorName} (${submission.designation})
-- Computer/Badge No: ${submission.computerNo}
+- Level/Zone: ${submission.levelZone || 'General Site'}
+- Task Supervisor: ${submission.supervisorName} - Computer/Badge No: ${submission.computerNo}
 - PPE Adherence: ${submission.ppeAdherence}
-- Compliance Score: ${submission.stats?.scorePercentage ?? 100}%
-- Flagged Items: ${(submission.stats?.flaggedItems || []).join(', ') || 'None'}
+- Total Marks: ${submission.stats?.totalMarks ?? 260} / ${submission.stats?.maxMarks ?? 260} (${submission.stats?.scorePercentage ?? 100}%)
+- Low-Rated / Action Items (1-2): ${(submission.stats?.flaggedItems || []).join(', ') || 'None'}
 
 Remarks / Action:
 ${submission.correctiveActions || 'All inspected parameters meet company and ISO 45001 standards.'}
@@ -328,12 +330,12 @@ Trojan Construction HSE Portal`);
     return [
       {
         id: 'hse-inspection-daily',
-        title: 'Daily HSE Inspection',
-        code: 'FRM-01',
+        title: 'Daily Site HSE Inspection / Performance Evaluation',
+        code: 'HSE-FRM-01',
         category: 'Daily Operations & Safety Auditing',
-        description: 'Mandatory daily site HSE inspection checklist covering Housekeeping, Scaffolding, Plant & Equipment, PPE, Site Services, Fire Safety, Health & Welfare, and Environmental management.',
+        description: 'Mandatory 52-point daily site HSE performance evaluation checklist (Sections A–J) with 1–5/NA ratings, per-item remarks, and Total Marks scoring.',
         isActive: true,
-        totalItems: 42,
+        totalItems: 52,
         badge: 'Primary Mandated'
       },
       {

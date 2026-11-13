@@ -5,7 +5,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { AuthService } from '../../services/auth.service';
 import { ConstructionService } from '../../services/construction.service';
 import { PdfExportService } from '../../services/pdf-export.service';
-import { ChecklistCategory, FormTemplate, HSE_INSPECTION_CHECKLIST_DATA, HseInspectionSubmission, SupervisorUser } from '../../models/construction.model';
+import { ChecklistCategory, FormTemplate, HSE_INSPECTION_CHECKLIST_DATA, HseInspectionSubmission,  HseRatingValue, SupervisorUser } from '../../models/construction.model';
 
 @Component({
   selector: 'app-supervisor',
@@ -20,6 +20,7 @@ export class SupervisorComponent {
   pdfExportService = inject(PdfExportService);
 
   readonly checklistCategories: ChecklistCategory[] = HSE_INSPECTION_CHECKLIST_DATA;
+   readonly ratingOptions: HseRatingValue[] = ['1', '2', '3', '4', '5', 'NA'];
 
   // Active view tab: 'active-form' | 'submissions' | 'forms-catalog'
   readonly activeTab = signal<'active-form' | 'submissions' | 'forms-catalog'>('active-form');
@@ -39,11 +40,12 @@ export class SupervisorComponent {
   // HSE Inspection Form Controls
   readonly inspectionForm = new FormGroup({
     
-    Language: new FormControl('SkyTower Commercial Complex & Transit Plaza', { nonNullable: true, validators: [Validators.required] }),
-    siteLocation: new FormControl('Downtown Financial District, Sector 4', { nonNullable: true }),
+    Language: new FormControl('Maysan Development Phase I TG2164', { nonNullable: true, validators: [Validators.required] }),
+    siteLocation: new FormControl('Al Reem Island', { nonNullable: true }),
+        levelZone: new FormControl('All Levels / Core Zone', { nonNullable: true }),
     date: new FormControl(new Date().toISOString().split('T')[0], { nonNullable: true, validators: [Validators.required] }),
     supervisorName: new FormControl('Savad Mohamed Salim', { nonNullable: true, validators: [Validators.required] }),
-    designation: new FormControl('', { nonNullable: true }),
+    designation: new FormControl('HSE', { nonNullable: true }),
     computerNo: new FormControl('SUP-8849', { nonNullable: true, validators: [Validators.required] }),
     hseOfficerName: new FormControl('Savad Mohamed Salim', { nonNullable: true }),
     hseOfficerEmail: new FormControl('savad.salim@trojan.ae', { nonNullable: true, validators: [Validators.email] }),
@@ -53,9 +55,10 @@ export class SupervisorComponent {
     signatureText: new FormControl('Savad Mohamed Salim (Digitally Verified)', { nonNullable: true })
   });
 
-  // State of checklist items: e.g. { "1.1": "Yes", "1.2": "Yes", ... }
-  readonly checklistAnswers = signal<Record<string, 'Yes' | 'No' | ''>>({});
-
+// State of checklist ratings: e.g. { "1": "5", "2": "4", "6": "NA", ... }
+  readonly checklistAnswers = signal<Record<string, HseRatingValue>>({});
+  // State of per-item remarks: e.g. { "1": "JSA reviewed at morning TBT", ... }
+  readonly checklistRemarks = signal<Record<string, string>>({});
   // Submitting / dispatch status
   readonly isSubmitting = signal<boolean>(false);
   readonly submittedRecord = signal<HseInspectionSubmission | null>(null);
@@ -84,13 +87,14 @@ export class SupervisorComponent {
   }
 
   private initChecklistAnswers() {
-    const initial: Record<string, 'Yes' | 'No' | ''> = {};
+    const initial: Record<string, HseRatingValue> = {};
     this.checklistCategories.forEach((cat) => {
       cat.items.forEach((item) => {
-        initial[item.id] = 'Yes'; // default to compliant for ease of use
+        initial[item.id] = '5'; // default to 5 (Excellent) for ease of use; supervisor adjusts per item
       });
     });
     this.checklistAnswers.set(initial);
+    this.checklistRemarks.set({});
   }
 
   // --- Auth Handlers ---
@@ -145,51 +149,105 @@ export class SupervisorComponent {
     this.handleLogin();
   }
 
-  // --- Checklist Handlers ---
-  setAnswer(itemId: string, value: 'Yes' | 'No') {
+ // --- Checklist Rating & Remarks Handlers ---
+  setAnswer(itemId: string, value: HseRatingValue) {
     this.checklistAnswers.update((current) => ({
       ...current,
       [itemId]: value
     }));
   }
+   onRemarkInput(itemId: string, event: Event) {
+    const input = event.target as HTMLInputElement | null;
+    const value = input ? input.value : '';
+    this.checklistRemarks.update((current) => ({
+      ...current,
+      [itemId]: value
+    }));
+  }
 
-  markAll(value: 'Yes' | 'No') {
-    const updated: Record<string, 'Yes' | 'No' | ''> = {};
+   markAll(value: HseRatingValue) {
+    const updated: Record<string, HseRatingValue> = {};
     this.checklistCategories.forEach((cat) => {
       cat.items.forEach((item) => {
         updated[item.id] = value;
       });
     });
     this.checklistAnswers.set(updated);
+    if (value === '') {
+      this.checklistRemarks.set({});
+    }
   }
 
-  get stats() {
+  getRatingButtonClass(currentValue: HseRatingValue | undefined, option: HseRatingValue): string {
+    const isSelected = currentValue === option;
+    if (!isSelected) {
+      return 'bg-stone-950 text-stone-400 hover:text-white hover:border-stone-600 border-stone-800';
+    }
+    switch (option) {
+      case '5':
+        return 'bg-emerald-500 text-slate-950 font-black border-emerald-400 shadow-sm shadow-emerald-500/30';
+      case '4':
+        return 'bg-teal-500 text-slate-950 font-black border-teal-400 shadow-sm shadow-teal-500/30';
+      case '3':
+        return 'bg-amber-400 text-slate-950 font-black border-amber-300 shadow-sm shadow-amber-400/30';
+      case '2':
+        return 'bg-orange-500 text-white font-black border-orange-400 shadow-sm shadow-orange-500/30';
+      case '1':
+        return 'bg-red-600 text-white font-black border-red-500 shadow-sm shadow-red-600/30';
+      case 'NA':
+        return 'bg-stone-600 text-white font-black border-stone-500 shadow-sm';
+      default:
+        return 'bg-stone-950 text-stone-400 border-stone-800';
+    }
+  }
+
+  
+ get stats() {
     const answers = this.checklistAnswers();
+    const remarks = this.checklistRemarks();
     let total = 0;
-    let yesCount = 0;
-    let noCount = 0;
+    let ratedCount = 0;
+    let naCount = 0;
+    let unratedCount = 0;
+    let totalMarks = 0;
+    let maxMarks = 0;
+    let remarksCount = 0;
     const flaggedItems: string[] = [];
 
     this.checklistCategories.forEach((cat) => {
       cat.items.forEach((item) => {
         total++;
-        const val = answers[item.id];
-        if (val === 'Yes') yesCount++;
-        else if (val === 'No') {
-          noCount++;
-          flaggedItems.push(`${item.id} - ${item.text}`);
+        const val = answers[item.id] || '';
+        if (remarks[item.id] && remarks[item.id].trim().length > 0) {
+          remarksCount++;
+        }
+        if (val === 'NA') {
+          naCount++;
+        } else if (val === '') {
+          unratedCount++;
+        } else {
+          const numVal = Number(val);
+          if (!Number.isNaN(numVal) && numVal >= 1 && numVal <= 5) {
+            ratedCount++;
+            totalMarks += numVal;
+            maxMarks += 5;
+            if (numVal <= 2) {
+              flaggedItems.push(`#${item.id} (${val}/5) - ${item.text}`);
+            }
+          }
         }
       });
     });
-
-    const scorePercentage = total > 0 ? Math.round((yesCount / total) * 100) : 100;
-    return { total, yesCount, noCount, scorePercentage, flaggedItems };
+ const scorePercentage = maxMarks > 0 ? Math.round((totalMarks / maxMarks) * 100) : 100;
+    return { total, ratedCount, naCount, unratedCount, totalMarks, maxMarks, scorePercentage, remarksCount, flaggedItems };
   }
 
   // Build submission object
   private buildSubmissionObject(): HseInspectionSubmission {
     const formVals = this.inspectionForm.getRawValue();
     const answers = this.checklistAnswers();
+        const remarks = this.checklistRemarks();
+
     const statsObj = this.stats;
 
     return {
@@ -199,6 +257,7 @@ export class SupervisorComponent {
       formCode: 'HSE-FRM-01',
       Language: formVals.Language,
       siteLocation: formVals.siteLocation,
+      levelZone: formVals.levelZone,
       date: formVals.date,
       supervisorName: formVals.supervisorName,
       designation: formVals.designation,
@@ -209,11 +268,14 @@ export class SupervisorComponent {
       hseOfficerWhatsapp: formVals.hseOfficerWhatsapp,
       ppeAdherence: formVals.ppeAdherence,
       checklist: answers,
+      remarks,
       correctiveActions: formVals.correctiveActions,
       stats: {
         totalChecked: statsObj.total,
-        yesCount: statsObj.yesCount,
-        noCount: statsObj.noCount,
+        ratedCount: statsObj.ratedCount,
+        naCount: statsObj.naCount,
+        totalMarks: statsObj.totalMarks,
+        maxMarks: statsObj.maxMarks,
         scorePercentage: statsObj.scorePercentage,
         flaggedItems: statsObj.flaggedItems
       }

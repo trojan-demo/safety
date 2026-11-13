@@ -30,116 +30,163 @@ export class PdfExportService {
 
     // Helper: Header block on Page 1
     doc.setFont('helvetica', 'bold');
-    doc.setFontSize(15);
-    doc.setTextColor(17, 24, 39);
-    doc.text('Daily HSE Inspection Form', pageWidth / 2, 14, { align: 'center' });
+    doc.setFontSize(14);
+    doc.setTextColor(30, 58, 95);
+    doc.text('Daily Site HSE Inspection / Performance Evaluation', pageWidth / 2, 13, { align: 'center' });
 
-    // Project & Meta Sub-header banner
-    doc.setFontSize(9);
-    doc.setFont('helvetica', 'normal');
-    doc.setTextColor(75, 85, 99);
-    const subheaderText = `Audit Date: ${submission.date || new Date().toISOString().split('T')[0]}`;
-    doc.text(subheaderText, pageWidth / 2, 19, { align: 'center' });
+    // Rating legend subtitle
+    doc.setFontSize(7.8);
+    doc.setFont('helvetica', 'bold');
+    doc.setTextColor(30, 41, 59);
+    doc.text(
+      'Rating: 5 - Excellent | 4 - Good | 3 - Fair/Needs Improvement | 2 - Poor | 1 - Unsatisfactory | NA - Not Applicable',
+      pageWidth / 2,
+      18,
+      { align: 'center' }
+    );
 
     // Prepare table body rows
     const tableBody: RowInput[] = [];
+    let totalMarks = 0;
+    let maxMarks = 0;
 
     categories.forEach((cat) => {
-      // Category header row
+      // Category header row (A. ..., B. ..., etc.)
       tableBody.push([
         {
-          content: `${cat.categoryNumber}.`,
-          styles: { fontStyle: 'bold', fillColor: [219, 234, 254], textColor: [15, 23, 42] }
-        },
-        {
-          content: cat.categoryName,
-          styles: { fontStyle: 'bold', fillColor: [219, 234, 254], textColor: [15, 23, 42] }
-        },
-        {
-          content: '',
-          styles: { fillColor: [219, 234, 254] }
-        },
-        {
-          content: '',
-          styles: { fillColor: [219, 234, 254] }
+          content: `${cat.categoryCode}. ${cat.categoryName}`,
+          colSpan: 4,
+          styles: {
+            fontStyle: 'bold',
+            fillColor: [219, 234, 254],
+            textColor: [30, 58, 95]
+          }
         }
       ]);
 
       // Items inside category
       cat.items.forEach((item) => {
-        const val = submission.checklist[item.id] || '';
-        const isYes = val === 'Yes';
-        const isNo = val === 'No';
+        const rating = submission.checklist[item.id] || '';
+        const remarkText = (submission.remarks && submission.remarks[item.id]) ? submission.remarks[item.id] : '';
 
-        const yesMark = isYes ? '[X] Yes' : '[  ] Yes';
-        const noMark = isNo ? '[X] No' : '[  ] No';
+        const numVal = Number(rating);
+        if (!Number.isNaN(numVal) && numVal >= 1 && numVal <= 5) {
+          totalMarks += numVal;
+          maxMarks += 5;
+        }
+
+        let ratingColor: [number, number, number] = [30, 41, 59];
+        if (rating === '5' || rating === '4') {
+          ratingColor = [22, 101, 52];
+        } else if (rating === '3') {
+          ratingColor = [180, 83, 9];
+        } else if (rating === '2' || rating === '1') {
+          ratingColor = [185, 28, 28];
+        } else if (rating === 'NA') {
+          ratingColor = [100, 116, 139];
+        }
 
         tableBody.push([
-          item.id,
+          `${item.id}.`,
           item.text,
           {
-            content: yesMark,
+            content: rating || '—',
             styles: {
-              fontStyle: isYes ? 'bold' : 'normal',
-              textColor: isYes ? [22, 101, 52] : [100, 116, 139]
+              fontStyle: 'bold',
+              halign: 'center',
+              textColor: ratingColor
             }
           },
           {
-            content: noMark,
+            content: remarkText,
             styles: {
-              fontStyle: isNo ? 'bold' : 'normal',
-              textColor: isNo ? [185, 28, 28] : [100, 116, 139]
+              textColor: [51, 65, 85]
             }
           }
         ]);
       });
     });
 
+    const computedTotalMarks = submission.stats?.totalMarks ?? totalMarks;
+    const computedMaxMarks = submission.stats?.maxMarks ?? maxMarks;
+    const computedPercent = computedMaxMarks > 0 ? Math.round((computedTotalMarks / computedMaxMarks) * 100) : 100;
+
+    // Total Marks row
+    tableBody.push([
+      {
+        content: 'Total Marks',
+        colSpan: 2,
+        styles: {
+          fontStyle: 'bold',
+          fillColor: [241, 245, 249],
+          textColor: [15, 23, 42]
+        }
+      },
+      {
+        content: `${computedTotalMarks} / ${computedMaxMarks}`,
+        styles: {
+          fontStyle: 'bold',
+          halign: 'center',
+          fillColor: [241, 245, 249],
+          textColor: [30, 58, 95]
+        }
+      },
+      {
+        content: `Overall Performance Score: ${computedPercent}%`,
+        styles: {
+          fontStyle: 'bold',
+          fillColor: [241, 245, 249],
+          textColor: [22, 101, 52]
+        }
+      }
+    ]);
+
     // Generate Main Inspection Table
     autoTable(doc, {
-      startY: 23,
-      margin: { left: margin, right: margin, bottom: 20 },
+      startY: 21,
+      margin: { left: margin, right: margin, bottom: 18 },
       head: [
         [
-          { content: 'Sl No', styles: { fontStyle: 'bold', halign: 'center' } },
-          { content: 'Daily Site HSE Inspection', styles: { fontStyle: 'bold' } },
-          { content: 'Yes', styles: { fontStyle: 'bold', halign: 'center', cellWidth: 20 } },
-          { content: 'No', styles: { fontStyle: 'bold', halign: 'center', cellWidth: 20 } }
+          { content: 'Sl. No.', styles: { fontStyle: 'bold', halign: 'center' } },
+          { content: 'HSE Inspection / Performance Criteria', styles: { fontStyle: 'bold' } },
+          { content: 'Rating\n(1-5/NA)', styles: { fontStyle: 'bold', halign: 'center' } },
+          { content: 'Remarks', styles: { fontStyle: 'bold' } }
         ]
       ],
       body: tableBody,
       theme: 'grid',
       styles: {
-        fontSize: 7.8,
-        cellPadding: 2,
-        lineColor: [51, 65, 85],
+        fontSize: 7.4,
+        cellPadding: 1.8,
+        lineColor: [71, 85, 105],
         lineWidth: 0.2,
-        textColor: [30, 41, 59]
+        textColor: [30, 41, 59],
+        valign: 'middle'
       },
       headStyles: {
-        fillColor: [241, 245, 249],
-        textColor: [15, 23, 42],
+        fillColor: [30, 64, 104],
+        textColor: [255, 255, 255],
         lineColor: [51, 65, 85],
         lineWidth: 0.3
       },
       columnStyles: {
-        0: { cellWidth: 14, halign: 'center' },
-        1: { cellWidth: 'auto' },
-        2: { cellWidth: 20, halign: 'center' },
-        3: { cellWidth: 20, halign: 'center' }
+        0: { cellWidth: 13, halign: 'center' },
+        1: { cellWidth: 96 },
+        2: { cellWidth: 22, halign: 'center' },
+        3: { cellWidth: 'auto' }
       },
       didDrawPage: () => {
         // Page numbers
         doc.setFontSize(8);
         doc.setTextColor(148, 163, 184);
-        const pageStr = `Page ${doc.getNumberOfPages()} of `;
-        doc.text(pageStr, pageWidth - margin - 15, pageHeight - 8);
+        const pageStr = `Page ${doc.getNumberOfPages()}`;
+        doc.text(pageStr, pageWidth - margin - 14, pageHeight - 8);
       }
     });
 
-    // Add Metadata & Signatures block
-    const finalY = (doc.lastAutoTable?.finalY ?? 200) + 4;
-    const footerStartY = finalY > 230 ? (() => { doc.addPage(); return 15; })() : finalY;
+    // Add Metadata & Signatures block matching PDF Page 3 + sign-off details
+    const finalY = (doc.lastAutoTable?.finalY ?? 200) + 5;
+    const footerStartY = finalY > 235 ? (() => { doc.addPage(); return 15; })() : finalY;
 
     autoTable(doc, {
       startY: footerStartY,
@@ -147,36 +194,39 @@ export class PdfExportService {
       theme: 'grid',
       styles: {
         fontSize: 8,
-        cellPadding: 3,
+        cellPadding: 2.8,
         lineColor: [51, 65, 85],
         lineWidth: 0.25,
         textColor: [15, 23, 42]
       },
       body: [
         [
-          { content: `Date: ${submission.date || '—'}`, styles: { cellWidth: 50 } },
-          { content: `Name: ${submission.supervisorName || '—'}`, styles: { cellWidth: 70 } },
-          { content: `Designation: ${submission.designation || 'Site Supervisor'}`, styles: { cellWidth: 'auto' } }
+          { content: `Project: ${submission.Language || '—'}`, styles: { fontStyle: 'bold', cellWidth: 91 } },
+          { content: `Location: ${submission.siteLocation || '—'}`, styles: { fontStyle: 'bold', cellWidth: 91 } }
         ],
         [
-          { content: `Computer No: ${submission.computerNo || '—'}`, styles: { cellWidth: 50 } },
-          { content: `Signature: ${submission.supervisorSignature ? '[Electronically Signed]' : '_______________'}`, colSpan: 2, styles: { fontStyle: 'bold' } }
+          { content: `Level/Zone: ${submission.levelZone || 'General Site'}`, styles: { fontStyle: 'bold' } },
+          { content: `Date: ${submission.date || '—'}`, styles: { fontStyle: 'bold' } }
         ],
         [
-          { content: `HSE Officer: ${submission.hseOfficerName || 'Savad Mohamed Salim'}`, styles: { cellWidth: 50 } },
-          { content: `Signature: __________________________`, colSpan: 2 }
+          { content: `Task Supervisor Name: ${submission.supervisorName || '—'} (${submission.computerNo || '—'})`, styles: { fontStyle: 'bold' } },
+          { content: `Signature: ${submission.supervisorSignature ? `${submission.supervisorSignature} [Digitally Verified]` : '_______________'}`, styles: { fontStyle: 'bold' } }
+        ],
+        [
+          { content: `HSO/I Name: ${submission.hseOfficerName || 'Savad Mohamed Salim'}`, styles: { fontStyle: 'bold' } },
+          { content: `Signature: __________________________`, styles: { fontStyle: 'bold' } }
         ],
         [
           {
-            content: `PPE Adherence:   ${submission.ppeAdherence === 'Yes' ? '[X] Yes   [  ] No' : '[  ] Yes   [X] No'}`,
-            colSpan: 3,
-            styles: { fontStyle: 'bold', fillColor: [248, 250, 252] }
+            content: `Designation: ${submission.designation || 'Site Supervisor'}   |   PPE Adherence: ${submission.ppeAdherence === 'Yes' ? '[X] Yes  [ ] No' : '[ ] Yes  [X] No'}`,
+            colSpan: 2,
+            styles: { fontSize: 7.5, fillColor: [248, 250, 252] }
           }
         ],
         [
           {
-            content: `Audit Summary: Compliance Score: ${submission.stats?.scorePercentage ?? 100}% | Yes: ${submission.stats?.yesCount ?? 0} | Action Items Flagged: ${submission.stats?.noCount ?? 0}\nObservations / Corrective Action: ${submission.correctiveActions || 'Site safety conditions verified according to ISO 45001 standards.'}`,
-            colSpan: 3,
+            content: `Summary & Observations: Total Marks ${computedTotalMarks}/${computedMaxMarks} (${computedPercent}%) | NA Items: ${submission.stats?.naCount ?? 0} | Flagged (1-2): ${submission.stats?.flaggedItems?.length ?? 0}\nCorrective Actions / Overall Remarks: ${submission.correctiveActions || 'Site safety conditions verified according to ISO 45001 standards.'}`,
+            colSpan: 2,
             styles: { fontSize: 7.5, textColor: [71, 85, 105] }
           }
         ]
@@ -227,7 +277,7 @@ export class PdfExportService {
   async sharePdfNative(
     submission: HseInspectionSubmission,
     categories: ChecklistCategory[],
-    title = 'Daily HSE Inspection Form'
+    title = 'Daily Inspection Report'
   ): Promise<boolean> {
     if (typeof navigator === 'undefined' || !navigator.share) {
       return false;

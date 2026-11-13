@@ -33,8 +33,11 @@ export interface ChecklistQuestion {
   text: string;
 }
 
+export type HseRatingValue = '1' | '2' | '3' | '4' | '5' | 'NA' | '';
+
 export interface ChecklistCategory {
   categoryNumber: number;
+  categoryCode: string;
   categoryName: string;
   items: ChecklistQuestion[];
 }
@@ -95,12 +98,17 @@ export interface HseInspectionSubmission {
   hseOfficerEmail: string;
   hseOfficerWhatsapp: string;
   ppeAdherence: 'Yes' | 'No';
-  checklist: Record<string, 'Yes' | 'No' | ''>;
+  checklist: Record<string, HseRatingValue>;
+  remarks?: Record<string, string>;
+  levelZone:string;
   correctiveActions?: string;
   stats?: {
     totalChecked: number;
-    yesCount: number;
-    noCount: number;
+        ratedCount: number;
+    naCount: number;
+    totalMarks: number;
+    maxMarks: number;
+
     scorePercentage: number;
     flaggedItems: string[];
   };
@@ -119,98 +127,113 @@ export interface ContactMessage {
 export const HSE_INSPECTION_CHECKLIST_DATA: ChecklistCategory[] = [
   {
     categoryNumber: 1,
-    categoryName: 'Housekeeping/General Access/Egress',
+        categoryCode: 'A',
+    categoryName: 'HSE Planning, PTW, Documentation and Competency',
     items: [
-      { id: '1.1', text: 'All walkways and workplaces are not obstructed with rubbish, leads, equipment or material at all times' },
-      { id: '1.2', text: 'Openings are covered and guarded' },
-      { id: '1.3', text: 'No timbers lying around with nails left in' },
-      { id: '1.4', text: 'Materials stacked/stored safely' },
-      { id: '1.5', text: 'No materials stacked at the slab edges or above the toe board level of working platform' },
-      { id: '1.6', text: 'All staircases or work areas clear with sufficient lighting' },
-      { id: '1.7', text: 'Dedicated stairways for material and personal movements' },
+      { id: '1', text: 'Approved method statement/JSA available and daily TBT conducted' },
+      { id: '2', text: 'Applicable Permit to Work (PTW) valid, available and complied' },
+      { id: '3', text: 'Safety induction completed and communication barriers adequately controlled' },
+      { id: '4', text: 'Operatives, supervisors and specialists competent and appropriately certified' },
+      { id: '5', text: 'Simultaneous operations and contractor interfaces effectively coordinated' },
+      { id: '6', text: 'Night-work authority permit, supervision and minimum 100 lux lighting provided' },
     ]
   },
   {
     categoryNumber: 2,
-    categoryName: 'Working at Height-Scaffolding',
+     categoryCode: 'B',
+    categoryName: 'Emergency, Welfare, Occupational Health and Environment',
     items: [
-      { id: '2.1', text: 'Ladders-free from damage, 5 rungs extended from the platform level, tied and Kept 1 in 4 angle' },
-      { id: '2.2', text: 'Mobile towers braked and outriggers set' },
-      { id: '2.3', text: 'Unauthorised boarding or cantilever single board platform is not built above the working platform.' },
-      { id: '2.4', text: 'Exclusion zone is provided beneath while overhead work is in progress' },
-      { id: '2.5', text: 'No scaffold boards, toe boards and guardrails missing from working platforms' },
-      { id: '2.6', text: 'Intermediate transoms provided to prevent the sagging' },
-      { id: '2.7', text: 'No gaps in the working platform through which materials, equipment or tools could fall' },
-      { id: '2.8', text: 'Edge protection provided' },
-      { id: '2.9', text: 'Green tag is in place for safe scaffolds and Red tag for incomplete/unsafe scaffolds' },
-      { id: '2.10', text: 'Operatives working only on Green Tagged Scaffolding' },
+      { id: '7', text: 'Firefighting equipment, emergency arrangements and trained fire wardens available' },
+      { id: '8', text: 'First-aid facilities and trained first aider available' },
+      { id: '9', text: 'Rest area, drinking water, toilets and designated smoking area maintained' },
+      { id: '10', text: 'Temperature, humidity, wind, fog and rain conditions monitored and controlled' },
+      { id: '11', text: 'Noise, vibration and dust controls implemented' },
+      { id: '12', text: 'Lighting, ventilation and shading adequate for the work' },
+      { id: '13', text: 'Environmental protection, spill prevention and waste segregation/disposal maintained' },
     ]
   },
   {
     categoryNumber: 3,
-    categoryName: 'PLANT & EQUIPMENT',
+    categoryCode: 'C',
+    categoryName: 'Access, Housekeeping, Material Storage and Hazard Protection',
     items: [
-      { id: '3.1', text: 'Any plant operated is inspected and in good condition' },
-      { id: '3.2', text: 'Plant is operated by authorised person' },
-      { id: '3.3', text: 'Lifting equipments, gears, operators certified by the GoK approved third party.' },
-      { id: '3.4', text: 'Lifting Operation in compliance with Lifting Permit. Lifting points defined, Tag line attached to the load' },
-      { id: '3.5', text: 'Moving parts of plant are suitably protected/guarded' },
-      { id: '3.6', text: 'Hand Tools are in good working condition / right tool for the right task' },
+      { id: '14', text: 'Safe access/egress, housekeeping, clear walkways/stairs and slip/trip prevention maintained' },
+      { id: '15', text: 'Work layout and available working space adequate and not obstructed' },
+      { id: '16', text: 'Loading, unloading and stacking activities safely controlled' },
+      { id: '17', text: 'Materials properly stored, secured and protected from weather' },
+      { id: '18', text: 'Sharp edges protected and protruding nails removed or made safe' },
+      { id: '19', text: 'Falling/flying objects controlled and suitable exclusion zones established' },
+      { id: '20', text: 'Openings, hazardous areas and protruding rebars protected with barricades/signage/caps' },
     ]
   },
   {
     categoryNumber: 4,
-    categoryName: 'PPE (PERSONAL PROTECTIVE EQUIPMENT)',
+    categoryCode: 'D',
+    categoryName: 'Work at Height, Scaffolding and Temporary Works',
     items: [
-      { id: '4.1', text: 'Operatives wear Safety Helmet, High Visibility Clothing/Vest and Safety Footwear' },
-      { id: '4.2', text: 'Job specific PPE provided such as Earplugs, goggles, gloves, mask, harness and lanyard etc' },
-    ]
-  },
-  {
-    categoryNumber: 5,
-    categoryName: 'SITE SERVICES',
-    items: [
-      { id: '5.1', text: 'Earth Leakage Circuit Breaker (ELCB)/ Residual Current Device (RCD) provided as appropriate' },
-      { id: '5.2', text: 'Live cables not left in water or not obstructing. Cables are suspended/routed correctly' },
-      { id: '5.3', text: 'No damaged electrical connections/fittings or electric cables' },
-      { id: '5.4', text: 'Underground services identified and protected' },
+      { id: '21', text: 'Edge protection, PFPE and work-at-height rescue arrangements provided' },
+      { id: '22', text: 'Scaffolds complete with safe platform, access ladder, guardrails, toe boards and valid scaffold tag' },
+      { id: '23', text: 'Ladders/step ladders suitable, inspected, secured and free from defects' },
+      { id: '24', text: 'Formwork/falsework supported by approved design, calculations and drawings; competent TWC appointed, PTW and permit-to-load/strike issued, safe access, fall protection and controlled dismantling provided' },
+      { id: '25', text: 'Unprotected holes and openings securely covered or guarded to prevent falls and falling objects' },
+      { id: '26', text: 'Manual handling, lifting and carrying activities properly assessed and controlled' },
     ]
   },
   {
     categoryNumber: 6,
-    categoryName: 'FIRE',
+      categoryCode: 'E',
+    categoryName: 'Excavation, Piling',
     items: [
-      { id: '6.1', text: 'Fire Emergency procedure, assembly point, Emergency contact Nos. Evacuation routes available' },
-      { id: '6.2', text: 'Hot Work Permit is available (Gas cutting, Burning and welding works) for hot works' },
-      { id: '6.3', text: 'Fire Extinguisher is available for valid use and all aware of Assembly point' },
-      { id: '6.4', text: 'Flash back arrester is fitted with all gas cylinders' },
-      { id: '6.5', text: 'Smoking prohibited at site (designated location only)' },
-      { id: '6.6', text: 'Aware of First Aid Clinic' },
+      { id: '27', text: 'Excavation controls include services identification, safe access/egress, edge protection, warning signs, shoring and dewatering' },
+      { id: '28', text: 'Piling operations controlled through approved procedures, exclusion zones and competent supervision' },
     ]
   },
   {
     categoryNumber: 7,
-    categoryName: 'HEALTH & WELFARE',
+     categoryCode: 'F',
+    categoryName: 'Tools and Electrical Safety',
     items: [
-      { id: '7.1', text: 'Follow PPE/RPE instructions (COSHH) on the labels while using materials e.g. Paints, Cement, etc' },
-      { id: '7.2', text: 'Drinking water (cool) is available at all times' },
-      { id: '7.3', text: 'Dedicated rest area provided. Operatives do not utilise work area during their rest/break timings' },
-      { id: '7.4', text: 'Site is free from unpleasant odour ( urinating etc)' },
-      { id: '7.5', text: 'Noise to be less than 80dB' },
-      { id: '7.6', text: 'Workers healthy and fit for work' },
-      { id: '7.7', text: 'Site toilets & washbasins are clean and sewage water is not overflowing/flooding' },
-      { id: '7.8', text: 'Lighting and temperature satisfactory' },
+      { id: '29', text: 'Hand tools, work benches suitable for the intended task, site-fabricated or defective equipment prohibited from use' },
+      { id: '30', text: 'Power tools suitable (220V with 30 mA RCD), guarded, inspected and colour coded' },
+      { id: '31', text: 'Power-tool PAT tested and users are competent and authorized' },
+      { id: '32', text: 'Electrical cables/DBs properly routed, identified, protected and earthed, danger signs and RCD protection provided' },
+      { id: '33', text: 'Trapping, impact and entanglement hazards identified and controlled' },
+      { id: '34', text: 'Minimum and task-specific PPE/RPE correctly selected, worn and maintained' },
     ]
   },
   {
     categoryNumber: 8,
-    categoryName: 'GENERAL and Environment',
+    
+    categoryCode: 'H',
+    categoryName: 'Traffic Management and logistics',
     items: [
-      { id: '8.1', text: 'No communication barrier' },
-      { id: '8.2', text: 'Operatives know emergency numbers/procedures' },
-      { id: '8.3', text: 'Job Safety Analysis is specific, Tool Box Talk provided for operatives prior to start any task and is effective' },
-      { id: '8.4', text: 'Environment protective measures are in place' },
-      { id: '8.5', text: 'Waste management done effectively (oil, fuel, chemicals, construction waste etc' },
+      { id: '40', text: 'Traffic management includes PUDO, pedestrian segregation, inspection bay and designated parking' },
+      { id: '41', text: 'Site roads, haul routes and gates maintained with signages and speed limits enforced' },
+      { id: '42', text: 'Material laydown/offloading areas coordinated per the site logistics plan' },
+      { id: '43', text: 'Site perimeter fencing/hoarding secure and intact, no gaps, access controlled through manned gates' },
+    ]
+  },
+  {
+    categoryNumber: 9,
+    categoryCode: 'I',
+    categoryName: 'Chemical and Hazardous substances',
+    items: [
+      { id: '44', text: 'Chemical/COSHH assessments implemented, current SDS available at point of use and communicated to users' },
+      { id: '45', text: 'Chemicals stored in designated, ventilated and bunded areas, correctly labelled with incompatible substances segregated' },
+      { id: '46', text: 'Spill kits, containment measures and eyewash/washing facilities available, and chemical waste disposed of through approved routes' },
+      { id: '47', text: 'Task-specific PPE/RPE for chemical handling selected, worn and maintained, and handlers trained on chemical hazards' },
+    ]
+  },
+  {
+    categoryNumber: 10,
+    categoryCode: 'J',
+    categoryName: 'Hot Work Activities',
+    items: [
+      { id: '48', text: 'Hot-work PTW, fire watch, flashback arresters and suitable eye/fire protection and other TSPPE provided' },
+      { id: '49', text: 'Gas cylinders upright, secured, segregated by type and fitted with regulators, gauges and hoses free from defects' },
+      { id: '50', text: 'Combustible materials removed or protected, exclusion zone established and fire blankets/screens provided' },
+      { id: '51', text: 'Suitable fire extinguishers available, welding fume/ventilation controls implemented and post-work fire watch maintained' },
+      { id: '52', text: 'Hot-work operators (welders, cutters, grinders) competent, certified' },
     ]
   }
 ];

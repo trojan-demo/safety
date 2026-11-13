@@ -90,7 +90,7 @@ const projectsData = [
 const teamMembers = [
    {
     id: 'team-01',
-    name: 'Aswin Kumar Panigrahi',
+    name: 'Awais Asghar',
     role: 'HSE Manager',
     experience: '26 Years Experience',
     bio: 'Chartered Civil & Structural Engineer overseeing apex engineering governance, major infrastructure bids, and corporate zero-harm policies across all construction sites.',
@@ -110,7 +110,7 @@ const teamMembers = [
   },
   {
     id: 'team-03',
-    name: 'Jorial',
+    name: 'xxxxxx',
     role: 'HSE Officer',
     experience: '19 Years Experience',
     bio: 'Directs on-site plant operations, tower crane logistics, ground engineering, and rigorous daily mechanical lifting inspections across active work fronts.',
@@ -132,12 +132,12 @@ const teamMembers = [
 const formsCatalog = [
   {
     id: 'hse-inspection-daily',
-    title: 'Supervisor Site HSE Inspection',
+      title: 'Daily Site HSE Inspection / Performance Evaluation',
     code: 'HSE-FRM-01',
     category: 'Daily Operations & Safety Auditing',
-    description: 'Mandatory daily site HSE inspection checklist covering Housekeeping, Scaffolding, Plant & Equipment, PPE, Site Services, Fire Safety, Health & Welfare, and Environmental management.',
+    description: 'Mandatory 52-point daily site HSE performance evaluation checklist (Sections A–J) with 1–5/NA ratings, per-item remarks, and Total Marks scoring.',
     isActive: true,
-    totalItems: 42,
+    totalItems: 52,
     badge: 'Primary Mandated'
   },
   {
@@ -310,32 +310,43 @@ app.post('/api/forms/submit', (req, res) => {
   const id = `HSE-${Date.now()}-${Math.floor(Math.random() * 1000)}`;
   const timestamp = new Date().toISOString();
   
-  // Calculate compliance statistics
+  // Calculate performance evaluation statistics (1-5 / NA)
   const checklist = submission.checklist || {};
   const totalChecked = Object.keys(checklist).length;
-  let yesCount = 0;
-  let noCount = 0;
+  let ratedCount = 0;
+  let naCount = 0;
+  let totalMarks = 0;
+  let maxMarks = 0;
   const flaggedItems: string[] = [];
 
   for (const [key, val] of Object.entries(checklist)) {
-    if (val === 'Yes') {
-      yesCount++;
-    } else if (val === 'No') {
-      noCount++;
-      flaggedItems.push(key);
+    const strVal = String(val);
+    if (strVal === 'NA') {
+      naCount++;
+    } else {
+      const numVal = Number(strVal);
+      if (!Number.isNaN(numVal) && numVal >= 1 && numVal <= 5) {
+        ratedCount++;
+        totalMarks += numVal;
+        maxMarks += 5;
+        if (numVal <= 2) {
+          flaggedItems.push(key);
+        }
+      }
     }
   }
 
-  const scorePercentage = totalChecked > 0 ? Math.round((yesCount / totalChecked) * 100) : 100;
-
-  const newRecord = {
+const scorePercentage = maxMarks > 0 ? Math.round((totalMarks / maxMarks) * 100) : 100;
+ const newRecord = {
     id,
     timestamp,
     ...submission,
     stats: {
       totalChecked,
-      yesCount,
-      noCount,
+      ratedCount,
+      naCount,
+      totalMarks,
+      maxMarks,
       scorePercentage,
       flaggedItems
     }
